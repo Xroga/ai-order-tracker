@@ -1,1 +1,15 @@
+name = "CourierDetect Pro"
+client_id = "01eb5efeb620eef58d313a65bfe89e0c"
+application_url = "https://your-app.pages.dev"
+embedded = true
 
+[auth]
+redirect_urls = [
+  "https://your-worker.your-username.workers.dev/auth/callback"
+]
+
+[access_scopes]
+scopes = "read_orders, write_orders, read_products"
+
+[webhooks]
+api_version = "2024-07"
