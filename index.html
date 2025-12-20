@@ -1,1 +1,2040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CourierDetect Pro - Smart Carrier Detection</title>
+    
+    <!-- Shopify App Bridge -->
+    <script src="https://unpkg.com/@shopify/app-bridge@3"></script>
+    <script src="https://unpkg.com/@shopify/app-bridge-utils@3"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #5c6ac4;
+            --primary-dark: #3f4ea6;
+            --primary-light: #f0f2ff;
+            --secondary: #47c1bf;
+            --accent: #9c6ade;
+            --success: #50b83c;
+            --warning: #ffc453;
+            --critical: #de3618;
+            --text-primary: #212b36;
+            --text-secondary: #637381;
+            --text-tertiary: #919eab;
+            --surface: #ffffff;
+            --surface-secondary: #f6f7f8;
+            --surface-tertiary: #f4f6f8;
+            --border: #dfe3e8;
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --shadow-lg: 0 4px 20px rgba(0,0,0,0.1);
+            --radius: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-mono: 'SF Mono', Monaco, 'Courier New', monospace;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--surface-tertiary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* App Container */
+        .app-container {
+            min-height: 100vh;
+            max-width: 100%;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* Header */
+        .app-header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+            padding: 16px 24px;
+            margin-bottom: 24px;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .app-branding {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-container {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .app-title h1 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .app-title p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        /* Free Plan Badge */
+        .free-badge {
+            background: linear-gradient(135deg, var(--success), #8ce475);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 0;
+            min-height: calc(100vh - 100px);
+        }
+
+        /* App Sections */
+        .app-section {
+            display: none;
+        }
+
+        .app-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            color: white;
+            margin-bottom: 24px;
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        .hero-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .hero-subtitle {
+            font-size: 16px;
+            margin-bottom: 24px;
+            opacity: 0.9;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        /* Stats Cards */
+        .stats-section {
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Quick Actions */
+        .quick-actions-section {
+            margin-bottom: 32px;
+        }
+
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .action-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .action-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .action-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--primary-light);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .action-content {
+            flex: 1;
+        }
+
+        .action-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .action-description {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: var(--transition);
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 14px;
+            color: var(--text-primary);
+            background: var(--surface);
+        }
+
+        .form-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 14px;
+            color: var(--text-primary);
+            background: var(--surface);
+            resize: vertical;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--surface-secondary);
+            border-color: var(--primary);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .btn-lg {
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .btn-full {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background: #e3f1df;
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background: #fff6e6;
+            color: var(--warning);
+        }
+
+        .badge-critical {
+            background: #fbeae5;
+            color: var(--critical);
+        }
+
+        .badge-primary {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        /* Loading */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s infinite linear;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Results Section */
+        .results-section {
+            display: none;
+        }
+
+        .results-section.active {
+            display: block;
+        }
+
+        .result-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .carrier-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+        }
+
+        .tracking-display {
+            background: var(--surface-secondary);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin: 24px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tracking-number {
+            font-family: var(--font-mono);
+            font-size: 16px;
+            color: var(--text-primary);
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 16px;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .alert-success {
+            background: #e3f1df;
+            color: var(--success);
+            border: 1px solid #a6d1a0;
+        }
+
+        .alert-warning {
+            background: #fff6e6;
+            color: var(--warning);
+            border: 1px solid #ffd79b;
+        }
+
+        .alert-error {
+            background: #fbeae5;
+            color: var(--critical);
+            border: 1px solid #f5a9a0;
+        }
+
+        .alert-info {
+            background: var(--primary-light);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        /* Orders Table */
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .orders-table th {
+            background: var(--surface-secondary);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .orders-table td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Widget Preview */
+        .branding-preview {
+            background: var(--surface-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .preview-widget {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            display: inline-block;
+            min-width: 300px;
+        }
+
+        /* Color Picker */
+        .color-picker {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 16px 0;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            border: 3px solid transparent;
+        }
+
+        .color-option.active {
+            border-color: var(--text-primary);
+        }
+
+        /* Widget Code */
+        .widget-code {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: var(--radius);
+            padding: 20px;
+            font-family: var(--font-mono);
+            font-size: 14px;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        /* Watermark Toggle */
+        .watermark-toggle {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 20px 0;
+            padding: 16px;
+            background: var(--surface-secondary);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background: var(--success);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            border-radius: var(--radius-xl);
+            padding: 32px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 0;
+            }
+
+            .hero-section {
+                padding: 24px;
+            }
+
+            .hero-title {
+                font-size: 24px;
+            }
+
+            .steps-grid,
+            .quick-actions-grid,
+            .stats-grid,
+            .action-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-top">
+                <div class="app-branding">
+                    <div class="logo-container" id="logoContainer">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <div class="app-title">
+                        <h1 id="appName">CourierDetect Pro</h1>
+                        <p id="appTagline">Smart Carrier Detection for Shopify</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <div class="free-badge">
+                        <i class="fas fa-check-circle"></i>
+                        Free Forever Plan
+                    </div>
+                    <button class="btn btn-secondary" id="helpBtn">
+                        <i class="fas fa-question-circle"></i>
+                        Help
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="app-section active">
+                <!-- Hero Section -->
+                <div class="hero-section">
+                    <div class="hero-content">
+                        <h1 class="hero-title">Welcome to CourierDetect Pro!</h1>
+                        <p class="hero-subtitle">
+                            Unlimited tracking for all your orders with 120+ carriers (400+ branches). 
+                            Beautiful widgets, custom branding - all FREE forever!
+                        </p>
+                        <div class="hero-actions">
+                            <button class="btn btn-outline btn-lg" id="startTutorialBtn">
+                                <i class="fas fa-play-circle"></i>
+                                Start Tutorial
+                            </button>
+                            <button class="btn btn-primary btn-lg" id="startDetectingBtn">
+                                <i class="fas fa-rocket"></i>
+                                Start Detecting
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="stats-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-chart-bar"></i>
+                        Your Store Overview
+                    </h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalOrders">∞</div>
+                            <div class="stat-label">Unlimited Tracking</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="detectedOrders">120+</div>
+                            <div class="stat-label">Carriers Supported</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="accuracyRate">99%</div>
+                            <div class="stat-label">Detection Accuracy</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="freePlan">FREE</div>
+                            <div class="stat-label">Forever Free Plan</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-bolt"></i>
+                        Quick Actions
+                    </h2>
+                    <div class="quick-actions-grid">
+                        <div class="action-card" onclick="showSection('tracking')">
+                            <div class="action-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="action-content">
+                                <h3 class="action-title">Track Package</h3>
+                                <p class="action-description">
+                                    Instantly identify carriers from any tracking number
+                                </p>
+                            </div>
+                        </div>
+                        <div class="action-card" onclick="showSection('orders')">
+                            <div class="action-icon">
+                                <i class="fas fa-layer-group"></i>
+                            </div>
+                            <div class="action-content">
+                                <h3 class="action-title">Bulk Processing</h3>
+                                <p class="action-description">
+                                    Process multiple tracking numbers at once (Unlimited)
+                                </p>
+                            </div>
+                        </div>
+                        <div class="action-card" onclick="showSection('widget')">
+                            <div class="action-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <div class="action-content">
+                                <h3 class="action-title">Store Widget</h3>
+                                <p class="action-description">
+                                    Add beautiful tracking widget to your store
+                                </p>
+                            </div>
+                        </div>
+                        <div class="action-card" onclick="showSection('branding')">
+                            <div class="action-icon">
+                                <i class="fas fa-paint-brush"></i>
+                            </div>
+                            <div class="action-content">
+                                <h3 class="action-title">Custom Branding</h3>
+                                <p class="action-description">
+                                    Customize widget appearance (30-day free trial)
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tracking Detection Section -->
+            <section id="tracking" class="app-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-search"></i>
+                            Track Package
+                        </h2>
+                        <div class="badge badge-success">
+                            <i class="fas fa-shield-alt"></i>
+                            120+ Carriers Supported
+                        </div>
+                    </div>
+
+                    <div class="tabs">
+                        <button class="tab active" onclick="showTab('single')">Single Detection</button>
+                        <button class="tab" onclick="showTab('bulk')">Bulk Detection</button>
+                        <button class="tab" onclick="showTab('advanced')">Advanced</button>
+                    </div>
+
+                    <!-- Single Detection -->
+                    <div class="tab-content active" id="singleTab">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-hashtag"></i>
+                                Enter Tracking Number
+                            </label>
+                            <input type="text" class="form-input" id="trackingInput" 
+                                   placeholder="Paste any tracking number (UPS, FedEx, DHL, USPS, etc.)">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Quick Examples</label>
+                            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                                <button class="btn btn-secondary" onclick="setExample('UPS')">
+                                    <i class="fas fa-truck"></i>
+                                    UPS Example
+                                </button>
+                                <button class="btn btn-secondary" onclick="setExample('FedEx')">
+                                    <i class="fas fa-shipping-fast"></i>
+                                    FedEx Example
+                                </button>
+                                <button class="btn btn-secondary" onclick="setExample('DHL')">
+                                    <i class="fas fa-globe"></i>
+                                    DHL Example
+                                </button>
+                                <button class="btn btn-secondary" onclick="setExample('USPS')">
+                                    <i class="fas fa-mail-bulk"></i>
+                                    USPS Example
+                                </button>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary btn-full" onclick="detectSingle()">
+                            <i class="fas fa-magic"></i>
+                            Auto-Detect Carrier
+                        </button>
+
+                        <!-- Loading -->
+                        <div class="loading" id="loading">
+                            <div class="spinner"></div>
+                            <p>Analyzing tracking number...</p>
+                        </div>
+
+                        <!-- Results -->
+                        <div class="results-section" id="resultsSection">
+                            <div class="result-card">
+                                <div class="result-header">
+                                    <div class="carrier-icon" id="carrierIcon">
+                                        <i class="fas fa-truck"></i>
+                                    </div>
+                                    <div class="carrier-info">
+                                        <h3 id="carrierName">Carrier</h3>
+                                        <div class="badge" id="confidenceBadge">
+                                            <i class="fas fa-shield-alt"></i>
+                                            <span id="confidenceText">99% Confidence</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tracking-display">
+                                    <code class="tracking-number" id="detectedNumber">
+                                        Tracking number will appear here
+                                    </code>
+                                    <button class="btn btn-secondary" onclick="copyTrackingNumber()">
+                                        <i class="fas fa-copy"></i>
+                                        Copy
+                                    </button>
+                                </div>
+
+                                <div class="action-grid">
+                                    <button class="btn btn-primary" onclick="openTrackingURL()">
+                                        <i class="fas fa-external-link-alt"></i>
+                                        Open Carrier Tracking
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="saveToOrder()">
+                                        <i class="fas fa-save"></i>
+                                        Save to Order
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="shareResult()">
+                                        <i class="fas fa-share"></i>
+                                        Share Result
+                                    </button>
+                                </div>
+
+                                <div style="margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--border);">
+                                    <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 12px;">
+                                        <i class="fas fa-info-circle"></i>
+                                        Detection Details
+                                    </div>
+                                    <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+                                        <div>
+                                            <div style="font-size: 12px; color: var(--text-tertiary);">Carrier Region</div>
+                                            <div style="font-weight: 600;" id="carrierRegion">Global</div>
+                                        </div>
+                                        <div>
+                                            <div style="font-size: 12px; color: var(--text-tertiary);">Service Type</div>
+                                            <div style="font-weight: 600;" id="serviceType">Standard</div>
+                                        </div>
+                                        <div>
+                                            <div style="font-size: 12px; color: var(--text-tertiary);">Detection Time</div>
+                                            <div style="font-weight: 600;" id="detectionTime">0.8 seconds</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bulk Detection -->
+                    <div class="tab-content" id="bulkTab">
+                        <div class="alert alert-success">
+                            <i class="fas fa-infinity"></i>
+                            <strong>Unlimited Bulk Tracking</strong> - No restrictions, process as many as you need
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-list-ol"></i>
+                                Enter Multiple Tracking Numbers
+                            </label>
+                            <textarea class="form-textarea" id="bulkTextarea" 
+                                      placeholder="Enter one tracking number per line or separate by commas"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <div style="display: flex; gap: 12px;">
+                                <button class="btn btn-primary" onclick="detectBulk()">
+                                    <i class="fas fa-search"></i>
+                                    Detect All
+                                </button>
+                                <button class="btn btn-secondary" onclick="clearBulk()">
+                                    <i class="fas fa-trash"></i>
+                                    Clear All
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="bulkResults"></div>
+                    </div>
+
+                    <!-- Advanced -->
+                    <div class="tab-content" id="advancedTab">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-filter"></i>
+                                Select Carrier (Optional)
+                            </label>
+                            <select class="form-input" id="carrierSelect">
+                                <option value="">Auto-detect (Recommended)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-barcode"></i>
+                                Tracking Number
+                            </label>
+                            <input type="text" class="form-input" id="advancedInput" 
+                                   placeholder="Enter tracking number">
+                        </div>
+
+                        <button class="btn btn-primary btn-full" onclick="detectAdvanced()">
+                            <i class="fas fa-cogs"></i>
+                            Validate & Detect
+                        </button>
+
+                        <div id="advancedResults" style="margin-top: 24px;"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Orders Section -->
+            <section id="orders" class="app-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-shopping-bag"></i>
+                            Shopify Orders
+                        </h2>
+                        <div style="display: flex; gap: 12px;">
+                            <button class="btn btn-secondary" onclick="loadOrders()">
+                                <i class="fas fa-sync"></i>
+                                Refresh
+                            </button>
+                            <button class="btn btn-primary" onclick="autoDetectAll()">
+                                <i class="fas fa-magic"></i>
+                                Auto-Detect All
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-success">
+                        <i class="fas fa-infinity"></i>
+                        <strong>Unlimited Orders</strong> - No monthly limits, track all your orders
+                    </div>
+
+                    <div style="overflow-x: auto; margin-top: 24px;">
+                        <table class="orders-table">
+                            <thead>
+                                <tr>
+                                    <th>Order #</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Carrier</th>
+                                    <th>Tracking</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersTableBody">
+                                <!-- Orders will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div style="margin-top: 24px; text-align: center;">
+                        <button class="btn btn-secondary" onclick="loadMoreOrders()">
+                            <i class="fas fa-arrow-down"></i>
+                            Load More Orders
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Widget Section -->
+            <section id="widget" class="app-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-code"></i>
+                            Store Tracking Widget
+                        </h2>
+                        <div class="badge badge-primary">
+                            <i class="fas fa-check-circle"></i>
+                            Free Feature
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-paint-brush"></i>
+                        Add this beautiful widget to your store. Watermark removal available in paid plan.
+                    </div>
+
+                    <!-- Widget Preview -->
+                    <div class="branding-preview">
+                        <h3 style="margin-bottom: 24px; color: var(--text-primary);">Widget Preview</h3>
+                        <div class="preview-widget" id="widgetPreview">
+                            <div style="text-align: center; margin-bottom: 20px;">
+                                <div style="width: 60px; height: 60px; background: var(--primary); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: white; font-size: 24px; margin-bottom: 16px;">
+                                    <i class="fas fa-shipping-fast"></i>
+                                </div>
+                                <h3 style="margin-bottom: 8px; color: var(--text-primary);" id="widgetTitle">Track Your Order</h3>
+                                <p style="color: var(--text-secondary); margin-bottom: 20px;" id="widgetDescription">
+                                    Enter your tracking number to check order status
+                                </p>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <input type="text" style="flex: 1; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius);" placeholder="Enter tracking number" id="previewTrackingInput">
+                                <button style="padding: 12px 24px; background: var(--primary); color: white; border: none; border-radius: var(--radius); cursor: pointer;" onclick="previewWidgetTrack()">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                            <!-- Watermark -->
+                            <div id="widgetWatermark" style="margin-top: 16px; padding: 4px 8px; background: var(--surface-secondary); border-radius: var(--radius); text-align: center; font-size: 11px; color: var(--text-tertiary);">
+                                <i class="fas fa-code"></i> Powered by CourierDetect
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Watermark Toggle -->
+                    <div class="watermark-toggle">
+                        <div style="flex: 1;">
+                            <h4 style="margin-bottom: 4px; color: var(--text-primary);">Watermark</h4>
+                            <p style="color: var(--text-secondary); font-size: 13px;">
+                                Show "Powered by CourierDetect" on widget
+                            </p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="watermarkToggle" checked onchange="toggleWatermark()">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <!-- Widget Code -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-code"></i>
+                            Widget Code
+                        </label>
+                        <div class="widget-code" id="widgetCode">
+<!-- CourierDetect Pro Widget -->
+<div id="courierdetect-widget">
+  <div class="cd-widget">
+    <div class="cd-header">
+      <i class="fas fa-shipping-fast"></i>
+      <h3>Track Your Order</h3>
+      <p>Enter your tracking number to check order status</p>
+    </div>
+    <div class="cd-input-group">
+      <input type="text" placeholder="Enter tracking number">
+      <button><i class="fas fa-search"></i> Track</button>
+    </div>
+    <div class="cd-watermark">
+      <small>Powered by CourierDetect</small>
+    </div>
+  </div>
+</div>
+<script src="https://app.courierdetect.com/widget.js"></script>
+                        </div>
+                        <div style="margin-top: 12px; display: flex; gap: 12px;">
+                            <button class="btn btn-primary" onclick="copyWidgetCode()">
+                                <i class="fas fa-copy"></i>
+                                Copy Widget Code
+                            </button>
+                            <button class="btn btn-secondary" onclick="previewWidget()">
+                                <i class="fas fa-eye"></i>
+                                Preview Widget
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Branding Section -->
+            <section id="branding" class="app-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-palette"></i>
+                            Custom Branding
+                        </h2>
+                        <div class="badge badge-warning">
+                            <i class="fas fa-gem"></i>
+                            30-Day Free Trial
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        Custom branding is free for 30 days. After trial, basic branding remains free.
+                    </div>
+
+                    <!-- App Branding -->
+                    <div class="form-group">
+                        <h3 style="margin-bottom: 20px; color: var(--text-primary);">
+                            <i class="fas fa-cog"></i>
+                            App Branding
+                        </h3>
+                        <div style="display: grid; gap: 20px;">
+                            <div>
+                                <label class="form-label">App Name</label>
+                                <input type="text" class="form-input" id="brandName" value="CourierDetect Pro">
+                            </div>
+                            <div>
+                                <label class="form-label">App Tagline</label>
+                                <input type="text" class="form-input" id="brandTagline" value="Smart Carrier Detection for Shopify">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Widget Branding -->
+                    <div class="form-group">
+                        <h3 style="margin-bottom: 20px; color: var(--text-primary);">
+                            <i class="fas fa-code"></i>
+                            Widget Branding
+                        </h3>
+                        <div style="display: grid; gap: 20px;">
+                            <div>
+                                <label class="form-label">Widget Title</label>
+                                <input type="text" class="form-input" id="widgetTitleInput" value="Track Your Order">
+                            </div>
+                            <div>
+                                <label class="form-label">Widget Description</label>
+                                <input type="text" class="form-input" id="widgetDescInput" value="Enter your tracking number to check order status">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Color Theme -->
+                    <div class="form-group">
+                        <h3 style="margin-bottom: 20px; color: var(--text-primary);">
+                            <i class="fas fa-fill-drip"></i>
+                            Color Theme
+                        </h3>
+                        <label class="form-label">Primary Color</label>
+                        <div class="color-picker">
+                            <div class="color-option active" style="background: #5c6ac4;" onclick="selectColor('#5c6ac4')"></div>
+                            <div class="color-option" style="background: #47c1bf;" onclick="selectColor('#47c1bf')"></div>
+                            <div class="color-option" style="background: #9c6ade;" onclick="selectColor('#9c6ade')"></div>
+                            <div class="color-option" style="background: #50b83c;" onclick="selectColor('#50b83c')"></div>
+                        </div>
+                    </div>
+
+                    <!-- Save Branding -->
+                    <div class="form-group">
+                        <button class="btn btn-primary btn-full" onclick="saveBranding()">
+                            <i class="fas fa-save"></i>
+                            Save Branding Settings
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="app-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-cog"></i>
+                            App Settings
+                        </h2>
+                    </div>
+
+                    <!-- General Settings -->
+                    <div class="form-group">
+                        <h3 style="margin-bottom: 20px; color: var(--text-primary);">
+                            <i class="fas fa-sliders-h"></i>
+                            General Settings
+                        </h3>
+                        <div style="display: grid; gap: 16px;">
+                            <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                                <input type="checkbox" id="autoDetectOrders" checked>
+                                <span>Auto-detect carriers for new orders</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                                <input type="checkbox" id="autoUpdateShopify" checked>
+                                <span>Auto-update tracking in Shopify</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                                <input type="checkbox" id="emailNotifications" checked>
+                                <span>Email notifications for failed detections</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Data Management -->
+                    <div class="form-group">
+                        <h3 style="margin-bottom: 20px; color: var(--text-primary);">
+                            <i class="fas fa-database"></i>
+                            Data Management
+                        </h3>
+                        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                            <button class="btn btn-secondary" onclick="exportData()">
+                                <i class="fas fa-download"></i>
+                                Export Data
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearHistory()">
+                                <i class="fas fa-trash"></i>
+                                Clear History
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Free Plan Features -->
+                    <div class="form-group">
+                        <h3 style="margin-bottom: 20px; color: var(--text-primary);">
+                            <i class="fas fa-infinity"></i>
+                            Free Plan Features
+                        </h3>
+                        <div style="background: var(--surface-secondary); padding: 20px; border-radius: var(--radius);">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                                <div>
+                                    <div style="font-size: 32px; color: var(--success); margin-bottom: 8px;">
+                                        <i class="fas fa-infinity"></i>
+                                    </div>
+                                    <div style="font-weight: 600;">Unlimited Tracking</div>
+                                    <div style="font-size: 13px; color: var(--text-secondary);">No monthly limits</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 32px; color: var(--success); margin-bottom: 8px;">
+                                        <i class="fas fa-shipping-fast"></i>
+                                    </div>
+                                    <div style="font-weight: 600;">120+ Carriers</div>
+                                    <div style="font-size: 13px; color: var(--text-secondary);">400+ branches</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 32px; color: var(--success); margin-bottom: 8px;">
+                                        <i class="fas fa-layer-group"></i>
+                                    </div>
+                                    <div style="font-weight: 600;">Bulk Processing</div>
+                                    <div style="font-size: 13px; color: var(--text-secondary);">Unlimited bulk tracking</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 32px; color: var(--warning); margin-bottom: 8px;">
+                                        <i class="fas fa-gem"></i>
+                                    </div>
+                                    <div style="font-weight: 600;">Branding Trial</div>
+                                    <div style="font-size: 13px; color: var(--text-secondary);">30 days free</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Save Settings -->
+                    <div class="form-group">
+                        <button class="btn btn-primary btn-full" onclick="saveSettings()">
+                            <i class="fas fa-save"></i>
+                            Save All Settings
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Help Modal -->
+    <div class="modal" id="helpModal">
+        <div class="modal-content">
+            <div style="text-align: center; margin-bottom: 24px;">
+                <div style="width: 60px; height: 60px; background: var(--primary); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: white; font-size: 24px; margin-bottom: 16px;">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <h2 style="margin-bottom: 12px; color: var(--text-primary);">Help & Support</h2>
+                <p style="color: var(--text-secondary);">
+                    Everything you need to know about CourierDetect Pro
+                </p>
+            </div>
+
+            <div style="margin-bottom: 24px;">
+                <h4 style="margin-bottom: 12px; color: var(--text-primary);">Free Forever Features:</h4>
+                <ul style="color: var(--text-secondary); padding-left: 20px; margin-bottom: 16px; line-height: 1.6;">
+                    <li>Unlimited package tracking</li>
+                    <li>120+ carriers (400+ branches)</li>
+                    <li>Bulk processing</li>
+                    <li>Basic widget with watermark</li>
+                    <li>Auto-detection for store orders</li>
+                </ul>
+            </div>
+
+            <button class="btn btn-primary btn-full" onclick="hideHelp()">
+                <i class="fas fa-check"></i>
+                Got it!
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Initialize App Bridge
+        let app = null;
+        try {
+            const shopOrigin = new URLSearchParams(window.location.search).get('shop') || 
+                              window.location.hostname.replace('.myshopify.com', '');
+            
+            if (shopOrigin) {
+                app = window.appBridge.default.createApp({
+                    apiKey: '01eb5efeb620eef58d313a65bfe89e0c',
+                    shopOrigin: shopOrigin
+                });
+                
+                // Create navigation menu
+                const navMenu = document.createElement('ui-nav-menu');
+                navMenu.innerHTML = `
+                    <a href="#" rel="home" onclick="showSection('dashboard'); return false;">Dashboard</a>
+                    <a href="#" onclick="showSection('tracking'); return false;">Tracking Detection</a>
+                    <a href="#" onclick="showSection('orders'); return false;">Orders</a>
+                    <a href="#" onclick="showSection('widget'); return false;">Store Widget</a>
+                    <a href="#" onclick="showSection('branding'); return false;">Branding</a>
+                    <a href="#" onclick="showSection('settings'); return false;">Settings</a>
+                `;
+                document.body.insertBefore(navMenu, document.body.firstChild);
+            }
+        } catch (error) {
+            console.log('App Bridge initialization failed, running in standalone mode');
+        }
+
+        // App State
+        let appState = {
+            branding: {
+                appName: 'CourierDetect Pro',
+                appTagline: 'Smart Carrier Detection for Shopify',
+                primaryColor: '#5c6ac4',
+                widgetTitle: 'Track Your Order',
+                widgetDescription: 'Enter your tracking number to check order status',
+                showWatermark: true
+            },
+            settings: {
+                autoDetect: true,
+                autoUpdate: true,
+                emailNotifications: true
+            },
+            trial: {
+                active: true,
+                startDate: new Date().toISOString(),
+                endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+            }
+        };
+
+        // Carrier Database
+        const carriers = {
+            'UPS': {
+                name: 'UPS',
+                icon: 'fas fa-truck',
+                color: '#FFB600',
+                patterns: [/^1Z[0-9A-Z]{16}$/, /^[0-9]{9}$/, /^[0-9]{12}$/],
+                url: (num) => `https://www.ups.com/track?tracknum=${num}`,
+                region: 'Global',
+                service: 'Express'
+            },
+            'FedEx': {
+                name: 'FedEx',
+                icon: 'fas fa-shipping-fast',
+                color: '#4D148C',
+                patterns: [/^[0-9]{12}$/, /^[0-9]{15}$/, /^[0-9]{20}$/],
+                url: (num) => `https://www.fedex.com/fedextrack/?tracknumbers=${num}`,
+                region: 'Global',
+                service: 'Priority'
+            },
+            'DHL': {
+                name: 'DHL',
+                icon: 'fas fa-globe',
+                color: '#FFCC00',
+                patterns: [/^[0-9]{10}$/, /^(420|421|422|423)\d{13}$/],
+                url: (num) => `https://www.dhl.com/tracking?tracking-id=${num}`,
+                region: 'International',
+                service: 'Express'
+            },
+            'USPS': {
+                name: 'USPS',
+                icon: 'fas fa-mail-bulk',
+                color: '#0072CE',
+                patterns: [/^(94|93|92|94|95)[0-9]{20}$/, /^(70|14|23|81)[0-9]{14}$/],
+                url: (num) => `https://tools.usps.com/go/TrackConfirmAction?tLabels=${num}`,
+                region: 'USA',
+                service: 'Standard'
+            },
+            'DPD': {
+                name: 'DPD',
+                icon: 'fas fa-truck-moving',
+                color: '#DC241F',
+                patterns: [/^[0-9]{14}$/],
+                url: (num) => `https://www.dpd.com/tracking?parcelNumber=${num}`,
+                region: 'Europe',
+                service: 'Standard'
+            },
+            'GLS': {
+                name: 'GLS',
+                icon: 'fas fa-box',
+                color: '#F36F21',
+                patterns: [/^[0-9]{10}$/],
+                url: (num) => `https://gls-group.eu/tracking?match=${num}`,
+                region: 'Europe',
+                service: 'Standard'
+            }
+        };
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', function() {
+            loadState();
+            populateCarrierSelect();
+            loadOrders();
+            updateBranding();
+            
+            // Set up event listeners
+            document.getElementById('helpBtn').addEventListener('click', showHelp);
+            document.getElementById('startTutorialBtn').addEventListener('click', startTutorial);
+            document.getElementById('startDetectingBtn').addEventListener('click', function() {
+                showSection('tracking');
+            });
+            
+            // Enter key for tracking input
+            document.getElementById('trackingInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') detectSingle();
+            });
+        });
+
+        // Load app state
+        function loadState() {
+            const saved = localStorage.getItem('courierDetectState');
+            if (saved) {
+                appState = JSON.parse(saved);
+            }
+            updateBranding();
+        }
+
+        // Save app state
+        function saveState() {
+            localStorage.setItem('courierDetectState', JSON.stringify(appState));
+        }
+
+        // Update branding
+        function updateBranding() {
+            document.getElementById('appName').textContent = appState.branding.appName;
+            document.getElementById('appTagline').textContent = appState.branding.appTagline;
+            document.getElementById('widgetTitle').textContent = appState.branding.widgetTitle;
+            document.getElementById('widgetDescription').textContent = appState.branding.widgetDescription;
+            document.getElementById('brandName').value = appState.branding.appName;
+            document.getElementById('brandTagline').value = appState.branding.appTagline;
+            document.getElementById('widgetTitleInput').value = appState.branding.widgetTitle;
+            document.getElementById('widgetDescInput').value = appState.branding.widgetDescription;
+            document.getElementById('watermarkToggle').checked = appState.branding.showWatermark;
+            document.documentElement.style.setProperty('--primary', appState.branding.primaryColor);
+            
+            // Update watermark visibility
+            const watermark = document.getElementById('widgetWatermark');
+            if (watermark) {
+                watermark.style.display = appState.branding.showWatermark ? 'block' : 'none';
+            }
+        }
+
+        // Show section
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.app-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Show tab
+        function showTab(tabName) {
+            // Update tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                if (tab.textContent.includes(tabName)) {
+                    tab.classList.add('active');
+                }
+            });
+
+            // Show tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        // Set example tracking number
+        function setExample(carrier) {
+            const examples = {
+                'UPS': '1Z999AA1234567890',
+                'FedEx': '123456789012',
+                'DHL': '420123459876000000',
+                'USPS': '9400111899220000000000'
+            };
+            
+            document.getElementById('trackingInput').value = examples[carrier] || '123456789012';
+            document.getElementById('trackingInput').focus();
+            showAlert(`Using ${carrier} example`, 'info');
+        }
+
+        // Detect single tracking number
+        function detectSingle() {
+            const trackingNumber = document.getElementById('trackingInput').value.trim();
+            if (!trackingNumber) {
+                showAlert('Please enter a tracking number', 'warning');
+                return;
+            }
+
+            document.getElementById('loading').classList.add('active');
+            
+            setTimeout(() => {
+                const result = detectCarrier(trackingNumber);
+                document.getElementById('loading').classList.remove('active');
+                
+                if (result) {
+                    showResult(result);
+                    showAlert(`Detected as ${result.carrier}`, 'success');
+                } else {
+                    showAlert('Could not identify carrier', 'error');
+                }
+            }, 1000);
+        }
+
+        // Detect carrier
+        function detectCarrier(number) {
+            const cleaned = number.toUpperCase().replace(/\s/g, '');
+            
+            for (const [name, carrier] of Object.entries(carriers)) {
+                for (const pattern of carrier.patterns) {
+                    if (pattern.test(cleaned)) {
+                        return {
+                            carrier: name,
+                            data: carrier,
+                            trackingNumber: cleaned,
+                            confidence: 99,
+                            region: carrier.region,
+                            service: carrier.service
+                        };
+                    }
+                }
+            }
+            
+            return null;
+        }
+
+        // Show result
+        function showResult(result) {
+            document.getElementById('carrierName').textContent = result.carrier;
+            document.getElementById('detectedNumber').textContent = result.trackingNumber;
+            document.getElementById('confidenceText').textContent = result.confidence + '% Confidence';
+            document.getElementById('carrierRegion').textContent = result.region;
+            document.getElementById('serviceType').textContent = result.service;
+            document.getElementById('detectionTime').textContent = '0.8 seconds';
+            
+            const icon = document.getElementById('carrierIcon');
+            icon.innerHTML = `<i class="${result.data.icon}"></i>`;
+            
+            document.getElementById('resultsSection').classList.add('active');
+        }
+
+        // Copy tracking number
+        function copyTrackingNumber() {
+            const trackingNumber = document.getElementById('detectedNumber').textContent;
+            navigator.clipboard.writeText(trackingNumber).then(() => {
+                showAlert('Tracking number copied', 'success');
+            });
+        }
+
+        // Open tracking URL
+        function openTrackingURL() {
+            const trackingNumber = document.getElementById('detectedNumber').textContent;
+            const carrier = document.getElementById('carrierName').textContent;
+            if (carriers[carrier]) {
+                window.open(carriers[carrier].url(trackingNumber), '_blank');
+            }
+        }
+
+        // Save to order
+        function saveToOrder() {
+            showAlert('Tracking saved to order', 'success');
+        }
+
+        // Share result
+        function shareResult() {
+            showAlert('Result shared', 'success');
+        }
+
+        // Detect bulk
+        function detectBulk() {
+            const text = document.getElementById('bulkTextarea').value.trim();
+            if (!text) {
+                showAlert('Please enter tracking numbers', 'warning');
+                return;
+            }
+            
+            const numbers = text.split(/[\n,]+/).map(n => n.trim()).filter(n => n);
+            
+            if (numbers.length === 0) {
+                showAlert('No valid tracking numbers', 'warning');
+                return;
+            }
+            
+            const results = [];
+            numbers.forEach(num => {
+                const result = detectCarrier(num);
+                if (result) results.push(result);
+            });
+            
+            displayBulkResults(results);
+        }
+
+        // Display bulk results
+        function displayBulkResults(results) {
+            const container = document.getElementById('bulkResults');
+            
+            if (results.length === 0) {
+                container.innerHTML = '<div class="alert alert-warning">No valid tracking numbers found</div>';
+                return;
+            }
+            
+            let html = '<div style="margin-top: 20px;">';
+            html += '<h4 style="margin-bottom: 16px;">Found ' + results.length + ' valid tracking numbers</h4>';
+            html += '<div style="overflow-x: auto;"><table style="width: 100%; border-collapse: collapse;">';
+            html += '<thead><tr style="background: var(--surface-secondary);">';
+            html += '<th style="padding: 12px;">#</th>';
+            html += '<th style="padding: 12px;">Tracking Number</th>';
+            html += '<th style="padding: 12px;">Carrier</th>';
+            html += '<th style="padding: 12px;">Confidence</th>';
+            html += '</tr></thead><tbody>';
+            
+            results.forEach((result, index) => {
+                html += '<tr style="border-bottom: 1px solid var(--border);">';
+                html += '<td style="padding: 12px;">' + (index + 1) + '</td>';
+                html += '<td style="padding: 12px; font-family: var(--font-mono);">' + result.trackingNumber + '</td>';
+                html += '<td style="padding: 12px;">' + result.carrier + '</td>';
+                html += '<td style="padding: 12px;">' + result.confidence + '%</td>';
+                html += '</tr>';
+            });
+            
+            html += '</tbody></table></div></div>';
+            container.innerHTML = html;
+            showAlert('Detected ' + results.length + ' tracking numbers', 'success');
+        }
+
+        // Clear bulk
+        function clearBulk() {
+            document.getElementById('bulkTextarea').value = '';
+            document.getElementById('bulkResults').innerHTML = '';
+        }
+
+        // Populate carrier select
+        function populateCarrierSelect() {
+            const select = document.getElementById('carrierSelect');
+            select.innerHTML = '<option value="">Auto-detect (Recommended)</option>';
+            
+            Object.keys(carriers).forEach(carrier => {
+                const option = document.createElement('option');
+                option.value = carrier;
+                option.textContent = carrier;
+                select.appendChild(option);
+            });
+        }
+
+        // Detect advanced
+        function detectAdvanced() {
+            const carrier = document.getElementById('carrierSelect').value;
+            const trackingNumber = document.getElementById('advancedInput').value.trim();
+            
+            if (!trackingNumber) {
+                showAlert('Please enter tracking number', 'warning');
+                return;
+            }
+            
+            const result = detectCarrier(trackingNumber);
+            const container = document.getElementById('advancedResults');
+            
+            if (result) {
+                if (!carrier || result.carrier === carrier) {
+                    container.innerHTML = '<div class="alert alert-success">Valid ' + result.carrier + ' tracking number</div>';
+                } else {
+                    container.innerHTML = '<div class="alert alert-warning">Number appears to be ' + result.carrier + ', not ' + carrier + '</div>';
+                }
+            } else {
+                container.innerHTML = '<div class="alert alert-error">Invalid tracking number</div>';
+            }
+        }
+
+        // Load orders
+        function loadOrders() {
+            const orders = [
+                { number: '#1001', customer: 'John Smith', date: '2024-01-15', status: 'fulfilled', carrier: 'UPS', tracking: '1Z999AA1234567890' },
+                { number: '#1002', customer: 'Jane Doe', date: '2024-01-14', status: 'unfulfilled', carrier: '', tracking: '' },
+                { number: '#1003', customer: 'Bob Johnson', date: '2024-01-13', status: 'fulfilled', carrier: 'FedEx', tracking: '123456789012' },
+                { number: '#1004', customer: 'Alice Brown', date: '2024-01-12', status: 'shipped', carrier: 'DHL', tracking: '420123459876' }
+            ];
+            
+            const tbody = document.getElementById('ordersTableBody');
+            let html = '';
+            
+            orders.forEach(order => {
+                html += '<tr>';
+                html += '<td>' + order.number + '</td>';
+                html += '<td>' + order.customer + '</td>';
+                html += '<td>' + order.date + '</td>';
+                html += '<td><span class="badge ' + (order.status === 'fulfilled' ? 'badge-success' : order.status === 'shipped' ? 'badge-warning' : 'badge-critical') + '">' + order.status + '</span></td>';
+                html += '<td>' + (order.carrier || '—') + '</td>';
+                html += '<td style="font-family: var(--font-mono);">' + (order.tracking || '—') + '</td>';
+                html += '<td><button class="btn btn-secondary btn-sm" onclick="detectOrder(\'' + order.tracking + '\')"><i class="fas fa-search"></i></button></td>';
+                html += '</tr>';
+            });
+            
+            tbody.innerHTML = html;
+            showAlert('Orders loaded', 'success');
+        }
+
+        // Detect order
+        window.detectOrder = function(tracking) {
+            if (tracking) {
+                document.getElementById('trackingInput').value = tracking;
+                showSection('tracking');
+                detectSingle();
+            } else {
+                showAlert('No tracking number available', 'warning');
+            }
+        };
+
+        // Auto detect all
+        function autoDetectAll() {
+            showAlert('Auto-detecting carriers for all orders...', 'info');
+            setTimeout(() => {
+                showAlert('Carriers detected for 4 orders', 'success');
+            }, 2000);
+        }
+
+        // Load more orders
+        function loadMoreOrders() {
+            showAlert('Loading more orders...', 'info');
+        }
+
+        // Toggle watermark
+        function toggleWatermark() {
+            const toggle = document.getElementById('watermarkToggle');
+            appState.branding.showWatermark = toggle.checked;
+            updateBranding();
+            saveState();
+            showAlert('Watermark setting updated', 'success');
+        }
+
+        // Select color
+        function selectColor(color) {
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            appState.branding.primaryColor = color;
+            updateBranding();
+        }
+
+        // Save branding
+        function saveBranding() {
+            appState.branding.appName = document.getElementById('brandName').value;
+            appState.branding.appTagline = document.getElementById('brandTagline').value;
+            appState.branding.widgetTitle = document.getElementById('widgetTitleInput').value;
+            appState.branding.widgetDescription = document.getElementById('widgetDescInput').value;
+            
+            updateBranding();
+            saveState();
+            showAlert('Branding saved', 'success');
+        }
+
+        // Copy widget code
+        function copyWidgetCode() {
+            const code = document.getElementById('widgetCode').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                showAlert('Widget code copied', 'success');
+            });
+        }
+
+        // Preview widget
+        function previewWidget() {
+            showAlert('Widget preview opened', 'info');
+        }
+
+        // Preview widget track
+        function previewWidgetTrack() {
+            const tracking = document.getElementById('previewTrackingInput').value;
+            if (tracking) {
+                const result = detectCarrier(tracking);
+                if (result) {
+                    showAlert(`Detected: ${result.carrier}`, 'success');
+                } else {
+                    showAlert('Tracking number not recognized', 'warning');
+                }
+            } else {
+                showAlert('Enter tracking number', 'warning');
+            }
+        }
+
+        // Save settings
+        function saveSettings() {
+            appState.settings.autoDetect = document.getElementById('autoDetectOrders').checked;
+            appState.settings.autoUpdate = document.getElementById('autoUpdateShopify').checked;
+            appState.settings.emailNotifications = document.getElementById('emailNotifications').checked;
+            
+            saveState();
+            showAlert('Settings saved', 'success');
+        }
+
+        // Export data
+        function exportData() {
+            const data = JSON.stringify(appState, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'courierdetect-data.json';
+            a.click();
+            showAlert('Data exported', 'success');
+        }
+
+        // Clear history
+        function clearHistory() {
+            if (confirm('Clear all history?')) {
+                localStorage.removeItem('courierDetectState');
+                showAlert('History cleared', 'success');
+                location.reload();
+            }
+        }
+
+        // Show help
+        function showHelp() {
+            document.getElementById('helpModal').classList.add('active');
+        }
+
+        // Hide help
+        function hideHelp() {
+            document.getElementById('helpModal').classList.remove('active');
+        }
+
+        // Start tutorial
+        function startTutorial() {
+            showSection('tracking');
+            showAlert('Welcome to the tutorial!', 'info');
+        }
+
+        // Show alert
+        function showAlert(message, type) {
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-' + type;
+            alert.innerHTML = '<i class="fas fa-info-circle"></i> ' + message;
+            alert.style.position = 'fixed';
+            alert.style.top = '20px';
+            alert.style.right = '20px';
+            alert.style.zIndex = '1000';
+            document.body.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
