@@ -1,0 +1,24 @@
+# wrangler.toml - Cloudflare Worker Configuration for CourierDetect Pro
+name = "courierdetect-oauth-worker"
+main = "worker.js"
+compatibility_date = "2024-12-21"
+
+# Environment variables (will be set in Cloudflare dashboard)
+[vars]
+# REPLACE THIS with your ACTUAL Cloudflare Pages URL after deployment
+# Example: https://courierdetect.pages.dev
+APP_URL = "https://courierdetect.pages.dev"
+
+# Production environment configuration
+[env.production]
+name = "courierdetect-oauth-worker-production"
+vars = { 
+    APP_URL = "https://courierdetect.pages.dev"
+}
+
+# Optional: Development environment (if you want separate dev/prod)
+[env.development]
+name = "courierdetect-oauth-worker-dev"
+vars = {
+    APP_URL = "https://dev.courierdetect.pages.dev"
+}
