@@ -2036,5 +2036,82 @@
             }, 3000);
         }
     </script>
+    <!-- Place this script in your index.html, before the closing </body> tag if possible -->
+<script>
+  // Wait for the page to fully load
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get authentication parameters from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const shop = urlParams.get('shop');
+    const token = urlParams.get('token');
+    
+    let app = null; // This will hold the Shopify App Bridge instance
+
+    // 1. Check if we just returned from OAuth with a token
+    if (shop && token) {
+      console.log('App authenticated for shop:', shop);
+      // SECURITY: Store the token temporarily for this session (consider more secure methods for production)
+      sessionStorage.setItem('shopify_shop', shop);
+      sessionStorage.setItem('shopify_token', token);
+      
+      // Initialize Shopify App Bridge
+      // IMPORTANT: The API key should ideally be fetched from your backend for security.
+      // For now, we are using the one from the URL/token flow.
+      try {
+        app = window.appBridge.default.createApp({
+          apiKey: '01eb5efeb620eef58d313a65bfe89e0c', // Your app's public API Key
+          shopOrigin: shop,
+        });
+        console.log('Shopify App Bridge initialized successfully.');
+      } catch (error) {
+        console.error('Failed to initialize Shopify App Bridge:', error);
+        alert('Could not connect to Shopify. Please refresh the page.');
+      }
+    } 
+    // 2. Check if we are inside the Shopify Admin (embedded app)
+    else if (window.self !== window.top) {
+      // When embedded, Shopify provides 'shop' and 'host' parameters
+      const shopFromEmbed = urlParams.get('shop');
+      const hostFromEmbed = urlParams.get('host');
+      
+      if (shopFromEmbed && hostFromEmbed) {
+        try {
+          app = window.appBridge.default.createApp({
+            apiKey: '01eb5efeb620eef58d313a65bfe89e0c',
+            shopOrigin: shopFromEmbed,
+            host: hostFromEmbed,
+          });
+          console.log('App Bridge initialized in embedded mode.');
+        } catch (error) {
+          console.error('Embedded init error:', error);
+        }
+      }
+    }
+    // 3. Not authenticated at all - we need to start the OAuth flow
+    else {
+      const currentShop = urlParams.get('shop');
+      // If someone loads your app with a ?shop=parameter, kick off OAuth
+      if (currentShop && currentShop.includes('.myshopify.com')) {
+        console.log('Initiating OAuth flow for:', currentShop);
+        // Redirect to your Cloudflare Worker's OAuth endpoint
+        window.location.href = `https://YOUR_WORKER_URL.workers.dev/auth?shop=${currentShop}`;
+        return; // Stop execution, the page is redirecting
+      }
+      // If no shop parameter, maybe show a public landing page or instructions
+      console.log('Running in standalone (non-Shopify) mode.');
+    }
+
+    // --- Your existing app initialization functions ---
+    // Only call these if the app is successfully initialized (app !== null)
+    // or if you want them to run in standalone demo mode.
+    if (app || true) { // 'true' allows demo mode. Change based on your logic.
+        loadState();
+        populateCarrierSelect();
+        // loadOrders(); // This requires a real API token
+        updateBranding();
+        // ... rest of your init code
+    }
+  });
+</script>
 </body>
 </html>
