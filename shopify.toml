@@ -1,15 +1,25 @@
+# shopify.toml - FINAL CONFIGURATION
 name = "CourierDetect Pro"
 client_id = "01eb5efeb620eef58d313a65bfe89e0c"
-application_url = "https://your-app.pages.dev"
+
+# REPLACE THIS WITH YOUR CLOUDFLARE PAGES FRONTEND URL
+application_url = "https://courierdetect.pages.dev"
 embedded = true
 
 [auth]
+# REPLACE THIS WITH YOUR CLOUDFLARE PAGES FRONTEND CALLBACK URL
+# It MUST be: {application_url}/auth/callback
 redirect_urls = [
-  "https://your-worker.your-username.workers.dev/auth/callback"
+  "https://courierdetect.pages.dev/auth/callback"
 ]
 
 [access_scopes]
-scopes = "read_orders, write_orders, read_products"
+scopes = "read_orders,write_orders,read_products"
 
 [webhooks]
 api_version = "2024-07"
+
+# Optional: Add if using Cloudflare Pages for deployment
+[build]
+command = "echo 'No build step for static HTML'"
+publish = "."
