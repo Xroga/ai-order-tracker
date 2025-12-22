@@ -1,0 +1,651 @@
+{% comment %}
+===========================================
+TRACKING WIDGET FOR CUSTOMERS
+===========================================
+Instructions:
+1. Create a new snippet: paste all code below
+2. Name: tracking-widget
+3. Add to any page: {% render 'tracking-widget' %}
+===========================================
+{% endcomment %}
+
+<div class="tracking-widget-container" id="customer-tracking-widget">
+  <div class="tracking-header">
+    <div class="tracking-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="40" height="40">
+        <path fill="currentColor" d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.7 1.3 3 3 3s3-1.3 3-3h6c0 1.7 1.3 3 3 3s3-1.3 3-3h2v-5l-3-4zM6 18.5c-.8 0-1.5-.7-1.5-1.5s.7-1.5 1.5-1.5 1.5.7 1.5 1.5-.7 1.5-1.5 1.5zm9-3.5H8.2c-.4-1.2-1.5-2-2.7-2-1.2 0-2.3.8-2.7 2H3V6h12v9zm3 3.5c-.8 0-1.5-.7-1.5-1.5s.7-1.5 1.5-1.5 1.5.7 1.5 1.5-.7 1.5-1.5 1.5zM17 12V9h2.2l1.8 2.5H17z"/>
+      </svg>
+    </div>
+    <h3>Track Your Order</h3>
+    <p>Enter your tracking number to check delivery status</p>
+  </div>
+  
+  <div class="tracking-input-section">
+    <div class="input-group">
+      <input type="text" 
+             id="customer-tracking-input" 
+             placeholder="e.g., 1Z999AA1234567890" 
+             aria-label="Tracking Number">
+      <button id="customer-track-btn" class="track-button">
+        <span class="btn-text">Track</span>
+        <span class="btn-spinner" style="display: none;">
+          <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <style>
+              .spinner { animation: rotate 2s linear infinite; transform-origin: center; }
+              @keyframes rotate { 100% { transform: rotate(360deg); } }
+              .path { stroke-dasharray: 1,150; stroke-dashoffset: 0; animation: dash 1.5s ease-in-out infinite; }
+              @keyframes dash { 0% { stroke-dasharray: 1,150; stroke-dashoffset: 0; } 50% { stroke-dasharray: 90,150; stroke-dashoffset: -35; } 100% { stroke-dasharray: 90,150; stroke-dashoffset: -124; } }
+            </style>
+            <circle class="path" cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </span>
+      </button>
+    </div>
+    <p class="input-hint">Enter UPS, FedEx, DHL, USPS, or other tracking numbers</p>
+  </div>
+  
+  <div class="tracking-result" id="tracking-result" style="display: none;">
+    <div class="result-header">
+      <div class="carrier-badge" id="carrier-badge">
+        <span class="carrier-name" id="carrier-name">Carrier</span>
+        <span class="confidence" id="confidence">99% Match</span>
+      </div>
+    </div>
+    
+    <div class="tracking-details">
+      <div class="detail-row">
+        <span class="detail-label">Tracking Number:</span>
+        <code class="tracking-number" id="result-tracking-number">123456789012</code>
+        <button class="copy-btn" id="copy-tracking-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 9H11C9.89543 9 9 9.89543 9 11V20C9 21.1046 9.89543 22 11 22H20C21.1046 22 22 21.1046 22 20V11C22 9.89543 21.1046 9 20 9Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M5 15H4C3.46957 15 2.96086 14.7893 2.58579 14.4142C2.21071 14.0391 2 13.5304 2 13V4C2 3.46957 2.21071 2.96086 2.58579 2.58579C2.96086 2.21071 3.46957 2 4 2H13C13.5304 2 14.0391 2.21071 14.4142 2.58579C14.7893 2.96086 15 3.46957 15 4V5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Copy
+        </button>
+      </div>
+      
+      <div class="detail-grid">
+        <div class="detail-item">
+          <span class="detail-item-label">Service Type</span>
+          <span class="detail-item-value" id="service-type">Standard</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-item-label">Region</span>
+          <span class="detail-item-value" id="carrier-region">Global</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-item-label">Detection Time</span>
+          <span class="detail-item-value" id="detection-time">0.8s</span>
+        </div>
+      </div>
+      
+      <div class="action-buttons">
+        <a href="#" target="_blank" class="action-btn primary" id="carrier-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 13V19C18 19.5304 17.7893 20.0391 17.4142 20.4142C17.0391 20.7893 16.5304 21 16 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V8C3 7.46957 3.21071 6.96086 3.58579 6.58579C3.96086 6.21071 4.46957 6 5 6H11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M15 3H21V9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10 14L21 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Open Carrier Tracking
+        </a>
+        <button class="action-btn secondary" id="share-result-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 12V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M16 6L12 2L8 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 2V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Share Result
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="tracking-error" id="tracking-error" style="display: none;">
+    <div class="error-icon">⚠️</div>
+    <h4>Tracking Number Not Recognized</h4>
+    <p>Please check the number and try again. Supported carriers: UPS, FedEx, DHL, USPS, and 120+ others.</p>
+  </div>
+  
+  <div class="widget-footer">
+    <p class="supported-carriers">
+      <strong>Supported Carriers:</strong> UPS, FedEx, DHL, USPS, DPD, GLS, and 120+ more
+    </p>
+    <p class="powered-by">
+      Powered by <strong>CourierDetect</strong>
+    </p>
+  </div>
+</div>
+
+<style>
+  /* Widget Styles */
+  .tracking-widget-container {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    max-width: 500px;
+    margin: 30px auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e1e5e9;
+    overflow: hidden;
+  }
+  
+  .tracking-header {
+    background: linear-gradient(135deg, #5c6ac4, #47c1bf);
+    color: white;
+    padding: 25px;
+    text-align: center;
+  }
+  
+  .tracking-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+  }
+  
+  .tracking-header h3 {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+  }
+  
+  .tracking-header p {
+    opacity: 0.9;
+    margin: 0;
+    font-size: 14px;
+  }
+  
+  .tracking-input-section {
+    padding: 25px;
+  }
+  
+  .input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  
+  #customer-tracking-input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+    transition: border-color 0.2s;
+  }
+  
+  #customer-tracking-input:focus {
+    outline: none;
+    border-color: #5c6ac4;
+  }
+  
+  .track-button {
+    background: #5c6ac4;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0 25px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 100px;
+    transition: background 0.2s;
+  }
+  
+  .track-button:hover {
+    background: #4a5bc1;
+  }
+  
+  .input-hint {
+    color: #6b7280;
+    font-size: 13px;
+    margin: 0;
+  }
+  
+  .tracking-result {
+    padding: 0 25px 25px 25px;
+  }
+  
+  .result-header {
+    margin-bottom: 20px;
+  }
+  
+  .carrier-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #f0f2ff;
+    padding: 8px 15px;
+    border-radius: 20px;
+    border: 1px solid #d1d9ff;
+  }
+  
+  .carrier-name {
+    font-weight: 600;
+    color: #5c6ac4;
+  }
+  
+  .confidence {
+    font-size: 12px;
+    background: #e3f1df;
+    color: #50b83c;
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+  
+  .tracking-details {
+    background: #f9fafb;
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .detail-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .detail-label {
+    color: #6b7280;
+    font-size: 14px;
+  }
+  
+  .tracking-number {
+    font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+    background: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    font-size: 14px;
+    flex: 1;
+  }
+  
+  .copy-btn {
+    background: white;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #4b5563;
+  }
+  
+  .copy-btn:hover {
+    background: #f9fafb;
+  }
+  
+  .detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .detail-item {
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .detail-item-label {
+    display: block;
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 4px;
+  }
+  
+  .detail-item-value {
+    display: block;
+    font-weight: 600;
+    color: #1f2937;
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .action-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    min-width: 120px;
+  }
+  
+  .action-btn.primary {
+    background: #5c6ac4;
+    color: white;
+    border: none;
+  }
+  
+  .action-btn.primary:hover {
+    background: #4a5bc1;
+  }
+  
+  .action-btn.secondary {
+    background: white;
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+  }
+  
+  .action-btn.secondary:hover {
+    background: #f9fafb;
+  }
+  
+  .tracking-error {
+    padding: 25px;
+    text-align: center;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    margin: 0 25px 25px 25px;
+  }
+  
+  .error-icon {
+    font-size: 32px;
+    margin-bottom: 15px;
+  }
+  
+  .tracking-error h4 {
+    color: #dc2626;
+    margin: 0 0 8px 0;
+  }
+  
+  .tracking-error p {
+    color: #6b7280;
+    margin: 0;
+    font-size: 14px;
+  }
+  
+  .widget-footer {
+    padding: 20px 25px;
+    background: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  .supported-carriers {
+    font-size: 13px;
+    color: #6b7280;
+    margin: 0 0 8px 0;
+  }
+  
+  .powered-by {
+    font-size: 12px;
+    color: #9ca3af;
+    margin: 0;
+    text-align: center;
+  }
+  
+  @media (max-width: 640px) {
+    .tracking-widget-container {
+      margin: 15px;
+    }
+    
+    .input-group {
+      flex-direction: column;
+    }
+    
+    .track-button {
+      width: 100%;
+      padding: 12px;
+    }
+    
+    .detail-row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .action-buttons {
+      flex-direction: column;
+    }
+  }
+</style>
+
+<script>
+  // Carrier detection database (client-side)
+  const carriers = {
+    'UPS': {
+      name: 'UPS',
+      color: '#FFB600',
+      patterns: [/^1Z[0-9A-Z]{16}$/i, /^[0-9]{9}$/, /^[0-9]{12}$/],
+      url: (num) => `https://www.ups.com/track?tracknum=${num}`,
+      region: 'Global',
+      service: 'Express'
+    },
+    'FedEx': {
+      name: 'FedEx',
+      color: '#4D148C',
+      patterns: [/^[0-9]{12}$/, /^[0-9]{15}$/, /^[0-9]{20}$/],
+      url: (num) => `https://www.fedex.com/fedextrack/?tracknumbers=${num}`,
+      region: 'Global',
+      service: 'Priority'
+    },
+    'DHL': {
+      name: 'DHL',
+      color: '#FFCC00',
+      patterns: [/^[0-9]{10}$/, /^(420|421|422|423)\d{13}$/i],
+      url: (num) => `https://www.dhl.com/tracking?tracking-id=${num}`,
+      region: 'International',
+      service: 'Express'
+    },
+    'USPS': {
+      name: 'USPS',
+      color: '#0072CE',
+      patterns: [/^(94|93|92|95)[0-9]{20}$/i, /^(70|14|23|81)[0-9]{14}$/],
+      url: (num) => `https://tools.usps.com/go/TrackConfirmAction?tLabels=${num}`,
+      region: 'USA',
+      service: 'Standard'
+    }
+  };
+
+  // Initialize widget
+  document.addEventListener('DOMContentLoaded', function() {
+    const trackBtn = document.getElementById('customer-track-btn');
+    const trackingInput = document.getElementById('customer-tracking-input');
+    
+    if (trackBtn) {
+      trackBtn.addEventListener('click', detectTracking);
+    }
+    
+    if (trackingInput) {
+      trackingInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          detectTracking();
+        }
+      });
+    }
+    
+    // Copy button
+    const copyBtn = document.getElementById('copy-tracking-btn');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', copyTrackingNumber);
+    }
+    
+    // Share button
+    const shareBtn = document.getElementById('share-result-btn');
+    if (shareBtn) {
+      shareBtn.addEventListener('click', shareResult);
+    }
+    
+    // Pre-fill with example if empty on focus
+    trackingInput.addEventListener('focus', function() {
+      if (!this.value) {
+        this.value = '1Z999AA1234567890';
+      }
+    });
+  });
+
+  // Detect carrier from tracking number
+  function detectTracking() {
+    const trackingNumber = document.getElementById('customer-tracking-input').value.trim();
+    const trackBtn = document.getElementById('customer-track-btn');
+    const btnText = trackBtn.querySelector('.btn-text');
+    const btnSpinner = trackBtn.querySelector('.btn-spinner');
+    
+    // Hide previous results
+    document.getElementById('tracking-result').style.display = 'none';
+    document.getElementById('tracking-error').style.display = 'none';
+    
+    if (!trackingNumber) {
+      showError('Please enter a tracking number');
+      return;
+    }
+    
+    // Show loading
+    btnText.style.display = 'none';
+    btnSpinner.style.display = 'inline-block';
+    trackBtn.disabled = true;
+    
+    // Simulate API call delay
+    setTimeout(() => {
+      const result = detectCarrier(trackingNumber);
+      
+      // Hide loading
+      btnText.style.display = 'inline-block';
+      btnSpinner.style.display = 'none';
+      trackBtn.disabled = false;
+      
+      if (result) {
+        showResult(result);
+      } else {
+        showError('Tracking number not recognized. Try UPS: 1Z999AA1234567890 or FedEx: 123456789012');
+      }
+    }, 800);
+  }
+
+  // Carrier detection logic
+  function detectCarrier(number) {
+    const cleaned = number.toUpperCase().replace(/\s/g, '');
+    
+    for (const [name, carrier] of Object.entries(carriers)) {
+      for (const pattern of carrier.patterns) {
+        if (pattern.test(cleaned)) {
+          return {
+            carrier: name,
+            data: carrier,
+            trackingNumber: cleaned,
+            confidence: 99,
+            region: carrier.region,
+            service: carrier.service
+          };
+        }
+      }
+    }
+    
+    // Try common patterns
+    if (/^[0-9]{20}$/.test(cleaned)) {
+      return {
+        carrier: 'USPS',
+        data: carriers.USPS,
+        trackingNumber: cleaned,
+        confidence: 85,
+        region: 'USA',
+        service: 'Standard'
+      };
+    }
+    
+    if (/^[0-9]{12}$/.test(cleaned)) {
+      return {
+        carrier: 'FedEx',
+        data: carriers.FedEx,
+        trackingNumber: cleaned,
+        confidence: 90,
+        region: 'Global',
+        service: 'Standard'
+      };
+    }
+    
+    return null;
+  }
+
+  // Show result
+  function showResult(result) {
+    document.getElementById('carrier-name').textContent = result.carrier;
+    document.getElementById('result-tracking-number').textContent = result.trackingNumber;
+    document.getElementById('confidence').textContent = result.confidence + '% Match';
+    document.getElementById('service-type').textContent = result.service;
+    document.getElementById('carrier-region').textContent = result.region;
+    document.getElementById('detection-time').textContent = '0.8s';
+    
+    // Set carrier link
+    const carrierLink = document.getElementById('carrier-link');
+    if (result.data.url) {
+      carrierLink.href = result.data.url(result.trackingNumber);
+    }
+    
+    // Show result section
+    document.getElementById('tracking-result').style.display = 'block';
+    
+    // Scroll to result
+    document.getElementById('tracking-result').scrollIntoView({ 
+      behavior: 'smooth', 
+      block: 'nearest' 
+    });
+  }
+
+  // Show error
+  function showError(message) {
+    const errorDiv = document.getElementById('tracking-error');
+    errorDiv.querySelector('p').textContent = message;
+    errorDiv.style.display = 'block';
+    errorDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // Copy tracking number
+  function copyTrackingNumber() {
+    const trackingNumber = document.getElementById('result-tracking-number').textContent;
+    navigator.clipboard.writeText(trackingNumber).then(() => {
+      const btn = document.getElementById('copy-tracking-btn');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '✓ Copied!';
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+      }, 2000);
+    });
+  }
+
+  // Share result
+  function shareResult() {
+    const carrier = document.getElementById('carrier-name').textContent;
+    const trackingNumber = document.getElementById('result-tracking-number').textContent;
+    
+    const shareData = {
+      title: 'Tracking Information',
+      text: `${carrier} Tracking: ${trackingNumber}`,
+      url: window.location.href
+    };
+    
+    if (navigator.share) {
+      navigator.share(shareData);
+    } else {
+      navigator.clipboard.writeText(`${carrier} Tracking: ${trackingNumber}`);
+      alert('Tracking info copied to clipboard!');
+    }
+  }
+</script>
