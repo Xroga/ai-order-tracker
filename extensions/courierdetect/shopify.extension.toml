@@ -1,0 +1,9 @@
+api_version = "2024-01"
+
+[[extensions]]
+type = "theme"
+name = "CourierDetect Tracker"
+description = "Add tracking widget to your store"
+
+[[extensions.targeting]]
+target = "theme.extension"
