@@ -1604,43 +1604,48 @@
             return false;
         }
         
-        // Create Shopify Navigation Menu
-        function createNavigationMenu() {
-            // Remove existing menu if any
-            const existingMenu = document.querySelector('ui-nav-menu');
-            if (existingMenu) {
-                existingMenu.remove();
-            }
-            
-            // Create new menu
-            const navMenu = document.createElement('ui-nav-menu');
-            navMenu.innerHTML = `
-                <a href="#" rel="home" onclick="showSection('dashboard'); return false;">
-                    <i class="fas fa-home"></i> Dashboard
-                </a>
-                <a href="#" onclick="showSection('tracking'); return false;">
-                    <i class="fas fa-search"></i> Tracking Detection
-                </a>
-                <a href="#" onclick="showSection('orders'); return false;">
-                    <i class="fas fa-shopping-bag"></i> Orders
-                </a>
-                <a href="#" onclick="showSection('widget'); return false;">
-                    <i class="fas fa-code"></i> Store Widget
-                </a>
-                <a href="#" onclick="showSection('branding'); return false;">
-                    <i class="fas fa-paint-brush"></i> Branding
-                </a>
-                <a href="#" onclick="showSection('settings'); return false;">
-                    <i class="fas fa-cog"></i> Settings
-                </a>
-            `;
-            
-            // Insert at the beginning of body
-            document.body.insertBefore(navMenu, document.body.firstChild);
-            
-            // Update navigation menu state
-            updateNavMenu();
-        }
+       // Create Shopify Navigation Menu
+function createNavigationMenu() {
+    // Remove existing menu if any
+    const existingMenu = document.querySelector('ui-nav-menu');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+    
+    // Create new menu with Privacy Policy
+    const navMenu = document.createElement('ui-nav-menu');
+    navMenu.innerHTML = `
+        <a href="#" rel="home" onclick="showSection('dashboard'); return false;">
+            <i class="fas fa-home"></i> Dashboard
+        </a>
+        <a href="#" onclick="showSection('tracking'); return false;">
+            <i class="fas fa-search"></i> Tracking Detection
+        </a>
+        <a href="#" onclick="showSection('orders'); return false;">
+            <i class="fas fa-shopping-bag"></i> Orders
+        </a>
+        <a href="#" onclick="showSection('widget'); return false;">
+            <i class="fas fa-code"></i> Store Widget
+        </a>
+        <a href="#" onclick="showSection('branding'); return false;">
+            <i class="fas fa-paint-brush"></i> Branding
+        </a>
+        <a href="#" onclick="showSection('settings'); return false;">
+            <i class="fas fa-cog"></i> Settings
+        </a>
+        
+        <!-- Privacy Policy Link -->
+        <a href="privacy.html" target="_blank">
+            <i class="fas fa-shield-alt"></i> Privacy Policy
+        </a>
+    `;
+    
+    // Insert at the beginning of body
+    document.body.insertBefore(navMenu, document.body.firstChild);
+    
+    // Update navigation menu state
+    updateNavMenu();
+}
         
         // Simulate auto-adding widget to store
         function autoAddWidgetToStore(shop) {
