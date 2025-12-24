@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - Xroga AI Order Tracking</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --dark: #1f2937;
+            --light: #f9fafb;
+            --gray: #6b7280;
+            --gray-light: #e5e7eb;
+            --border-radius: 12px;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+            color: var(--dark);
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            border-radius: var(--border-radius);
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.3;
+            animation: float 20s linear infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-30px, -30px) rotate(360deg); }
+        }
+        
+        .logo-container {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.15);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .logo {
+            font-size: 36px;
+            font-weight: 700;
+        }
+        
+        .header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        /* Main Content */
+        .content-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 50px;
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+        }
+        
+        .last-updated {
+            display: inline-flex;
+            align-items: center;
+            background: var(--light);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 30px;
+        }
+        
+        .last-updated i {
+            margin-right: 8px;
+            color: var(--secondary);
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .section h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section h2 i {
+            margin-right: 12px;
+            background: var(--primary);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+        
+        .section p {
+            margin-bottom: 15px;
+            color: #4b5563;
+        }
+        
+        .section ul, .section ol {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .section li {
+            margin-bottom: 8px;
+            color: #4b5563;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-left: 4px solid var(--primary);
+            padding: 20px;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            margin: 25px 0;
+        }
+        
+        .highlight-box p {
+            margin-bottom: 0;
+            font-weight: 500;
+        }
+        
+        /* Contact Section */
+        .contact-section {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, var(--light) 0%, #f3f4f6 100%);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            margin-top: 40px;
+        }
+        
+        .contact-icon {
+            flex-shrink: 0;
+            background: var(--primary);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-right: 20px;
+        }
+        
+        .contact-info h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            margin-top: 20px;
+        }
+        
+        .back-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+        }
+        
+        .back-button i {
+            margin-right: 8px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 40px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .content-card {
+                padding: 30px;
+            }
+            
+            .contact-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .contact-icon {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .content-card {
+                padding: 20px;
+            }
+            
+            .section h2 {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo-container">
+                <div class="logo">Xroga</div>
+            </div>
+            <h1>Privacy Policy</h1>
+            <p>Xroga AI Order Tracking - Powered by Artificial Intelligence for Shopify Stores</p>
+        </header>
+        
+        <main class="content-card">
+            <div class="last-updated">
+                <i class="fas fa-calendar-alt"></i>
+                Last Updated: February 15, 2024
+            </div>
+            
+            <div class="section">
+                <h2><i class="fas fa-info-circle"></i> Introduction</h2>
+                <p>This Privacy Policy describes how Xroga AI Order Tracking ("we", "our", or "us") collects, uses, and shares information about you when you use our Shopify application (the "App"). The App is developed by Muhammad Ibrahim.</p>
+                <p>We are committed to protecting your privacy and ensuring transparency about our data practices. This policy explains what data we collect, why we collect it, and how we use it to provide you with exceptional order tracking services powered by artificial intelligence.</p>
+            </div>
+            
+            <div class="section">
+                <h2><i class="fas fa-database"></i> Information We Collect</h2>
+                <p>When you install and use Xroga AI Order Tracking, we collect the following types of information:</p>
+                
+                <h3 style="color: var(--dark); margin-top: 20px; margin-bottom: 10px; font-size: 1.2rem;">Shop Information</h3>
+                <ul>
+                    <li>Shop name, domain, and contact details</li>
+                    <li>Store owner name and email address</li>
+                    <li>Shopify account details necessary for API access</li>
+                    <li>Store timezone and currency settings</li>
+                </ul>
+                
+                <h3 style="color: var(--dark); margin-top: 20px; margin-bottom: 10px; font-size: 1.2rem;">Order & Customer Data</h3>
+                <ul>
+                    <li>Order details (order numbers, dates, items, prices)</li>
+                    <li>Customer information (names, shipping addresses, contact details)</li>
+                    <li>Shipping and fulfillment status</li>
+                    <li>Tracking numbers and carrier information</li>
+                </ul>
+                
+                <h3 style="color: var(--dark); margin-top: 20px; margin-bottom: 10px; font-size: 1.2rem;">App Usage Data</h3>
+                <ul>
+                    <li>App configuration and settings</li>
+                    <li>Feature usage patterns and preferences</li>
+                    <li>Performance metrics and error logs</li>
+                    <li>Interaction data with our AI tracking system</li>
+                </ul>
+                
+                <div class="highlight-box">
+                    <p><i class="fas fa-shield-alt" style="color: var(--primary); margin-right: 8px;"></i> <strong>Important:</strong> We only collect data necessary for the app's core functionality. We never access or store sensitive payment information such as credit card numbers, which are handled exclusively by Shopify's secure payment system.</p>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2><i class="fas fa-cogs"></i> How We Use Your Information</h2>
+                <p>The information we collect is used exclusively to provide and improve our services:</p>
+                <ol>
+                    <li><strong>AI-Powered Order Tracking:</strong> Our artificial intelligence system analyzes order data to provide accurate tracking predictions, delivery estimates, and proactive notifications to your customers.</li>
+                    <li><strong>App Functionality:</strong> To enable core features like automated tracking updates, customer notifications, and tracking page customization.</li>
+                    <li><strong>Service Improvement:</strong> To enhance our AI algorithms, fix bugs, and develop new features based on usage patterns.</li>
+                    <li><strong>Customer Support:</strong> To respond to your inquiries and provide technical assistance when needed.</li>
+                    <li><strong>Communication:</strong> To send important updates about the app, new features, or policy changes (you can opt-out of marketing communications).</li>
+                    <li><strong>Security & Compliance:</strong> To monitor for security threats, prevent fraud, and comply with legal obligations.</li>
+                </ol>
+            </div>
+            
+            <div class="section">
+                <h2><i class="fas fa-share-alt"></i> Data Sharing & Third Parties</h2>
+                <p>We respect your data privacy and do not sell, rent, or trade your information. We only share data under the following circumstances:</p>
+                
+                <h3 style="color: var(--dark); margin-top: 20px; margin-bottom: 10px; font-size: 1.2rem;">With Your Consent</h3>
+                <p>We may share information when you give us explicit permission to do so.</p>
+                
+                <h3 style="color: var(--dark); margin-top: 20px; margin-bottom: 10px; font-size: 1.2rem;">Service Providers</h3>
+                <p>We work with trusted third-party providers who assist us in operating our app:</p>
+                <ul>
+                    <li><strong>Hosting Services:</strong> Cloud infrastructure providers for app hosting and data storage</li>
+                    <li><strong>Analytics Tools:</strong> To understand app performance and usage patterns</li>
+                    <li><strong>Email Services:</strong> For sending tracking notifications to customers</li>
+                </ul>
+                
+                <h3 style="color: var(--dark); margin-top: 20px; margin-bottom: 10px; font-size: 1.2rem;">Legal Requirements</h3>
+                <p>We may disclose information if required by law, court order, or governmental authority.</p>
+            </div>
+            
+            <div class="section">
+                <h2><i class="fas fa-lock"></i> Data Security & Protection</h2>
+                <p>We implement industry-standard security measures to protect your data:</p>
+                <ul>
+                    <li><strong>Encryption:</strong> All data transmitted between our servers and Shopify is encrypted using TLS 1.2+ protocols</li>
+                    <li><strong>Access Control:</strong> Strict access controls and authentication mechanisms limit data access to authorized personnel only</li>
+                    <li><strong>Regular Audits:</strong> We conduct regular security assessments and vulnerability scans</li>
+                    <li><strong>Data Minimization:</strong> We only collect and retain data necessary for app functionality</li>
+                    <li><strong>Secure Infrastructure:</strong> Our servers are hosted on secure, enterprise-grade cloud platforms with firewall protection</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h2><i class="fas fa-user-check"></i> Your Rights & Control</h2>
+                <p>You have the following rights regarding your data:</p>
+                <ul>
+                    <li><strong>Access:</strong> Request a copy of the data we have about your store</li>
+                    <li><strong>Correction:</strong> Request correction of inaccurate or incomplete data</li>
+                    <li><strong>Deletion:</strong> Request deletion of your data when you uninstall the app</li>
+                    <li><strong>Export:</strong> Request an export of your data in a machine-readable format</li>
+                    <li><strong>Opt-out:</strong> Opt-out of non-essential communications</li>
+                    <li><strong>Restriction:</strong> Request restriction of processing in certain circumstances</li>
+                </ul>
+                <p>To exercise any of these rights, please contact us using the information below.</p>
+            </div>
+            
+            <div class="section">
+                <h2><i class="fas fa-globe"></i> International Data Transfers</h2>
+                <p>Xroga AI Order Tracking is operated by Muhammad Ibrahim. Data may be processed and stored in servers located in different countries. We ensure that appropriate safeguards are in place to protect your data in accordance with this Privacy Policy and applicable laws.</p>
+            </div>
+            
+            <div class="section">
+                <h2><i class="fas fa-hourglass-half"></i> Data Retention</h2>
+                <p>We retain your data only for as long as necessary to provide our services and fulfill the purposes outlined in this policy. When you uninstall the app, we initiate data deletion processes within 30 days, except where we need to retain certain information for legal, regulatory, or legitimate business purposes.</p>
+            </div>
+            
+            <div class="section">
+                <h2><i class="fas fa-child"></i> Children's Privacy</h2>
+                <p>Our app is not intended for use by children under the age of 13. We do not knowingly collect personal information from children under 13. If we learn that we have collected personal information from a child under 13, we will delete that information promptly.</p>
+            </div>
+            
+            <div class="section">
+                <h2><i class="fas fa-file-contract"></i> Policy Changes</h2>
+                <p>We may update this Privacy Policy from time to time to reflect changes in our practices or legal requirements. We will notify you of any material changes by posting the new policy on this page and updating the "Last Updated" date. We encourage you to review this policy periodically.</p>
+            </div>
+            
+            <div class="contact-section">
+                <div class="contact-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <div class="contact-info">
+                    <h3>Contact Information</h3>
+                    <p>If you have any questions about this Privacy Policy or our data practices, please contact us:</p>
+                    <p><strong>App Developer:</strong> Muhammad Ibrahim</p>
+                    <p><strong>App Name:</strong> Xroga AI Order Tracking</p>
+                    <p><strong>Email:</strong> hello@xroga.com</p>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="index.html" class="back-button">
+                    <i class="fas fa-arrow-left"></i> Back to Xroga AI App
+                </a>
+            </div>
+        </main>
+        
+        <footer class="footer">
+            <p>© 2024 Xroga AI Order Tracking. Developed by Muhammad Ibrahim. All rights reserved.</p>
+            <p>This app is built for the Shopify platform and complies with Shopify's Partner Program Agreement.</p>
+        </footer>
+    </div>
+</body>
+</html>
