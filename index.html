@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root {
+         :root {
             --primary: #5c6ac4;
             --primary-dark: #3f4ea6;
             --primary-light: #f0f2ff;
@@ -949,6 +949,86 @@
                 justify-content: flex-end;
             }
         }
+                   .emergency-trackers {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 20px;
+    animation: fadeIn 0.3s ease-in;
+}
+
+.emergency-options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.emergency-option {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s;
+}
+
+.emergency-option:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.emergency-option.recommended {
+    border: 2px solid #007bff;
+    background: #f0f8ff;
+}
+
+.emergency-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    color: white;
+    font-size: 18px;
+}
+
+.emergency-info {
+    flex: 1;
+}
+
+.emergency-info strong {
+    display: block;
+    font-size: 14px;
+}
+
+.emergency-info small {
+    color: #6c757d;
+    font-size: 12px;
+}
+
+.emergency-info .btn {
+    margin-top: 5px;
+    padding: 3px 10px;
+    font-size: 12px;
+}
+
+.emergency-footer {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px dashed #dee2e6;
+    text-align: center;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+        }
     </style>
 </head>
 <body>
@@ -990,7 +1070,7 @@
                 <!-- Hero Section -->
                 <div class="hero-section">
                     <div class="hero-content">
-                        <h1 class="hero-title">Welcome to CourierDetect Pro!</h1>
+                        <h1 class="hero-title">Welcome to Xroga AI!</h1>
                         <p class="hero-subtitle">
                             Unlimited tracking for all your orders with 120+ carriers (400+ branches). 
                             Beautiful widgets, custom branding - all FREE forever!
@@ -1074,17 +1154,6 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="action-card" data-section="branding">
-                            <div class="action-icon">
-                                <i class="fas fa-paint-brush"></i>
-                            </div>
-                            <div class="action-content">
-                                <h3 class="action-title">Custom Branding</h3>
-                                <p class="action-description">
-                                    Customize widget appearance (30-day free trial)
-                                </p>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </section>
@@ -1152,6 +1221,9 @@
                             <div class="spinner"></div>
                             <p>Analyzing tracking number...</p>
                         </div>
+
+                        <!-- Emergency Options Container -->
+                        <div id="emergencyOptions"></div>
 
                         <!-- Results -->
                         <div class="results-section" id="resultsSection">
@@ -1334,7 +1406,7 @@
                 </div>
             </section>
 
-            <!-- Widget Section - SIMPLIFIED FOR MERCHANTS -->
+            <!-- Widget Section -->
             <section id="widget" class="app-section">
                 <div class="card">
                     <div class="card-header">
@@ -1371,164 +1443,6 @@
                             <p style="color: var(--text-secondary);">Visit your store to see the widget in action</p>
                         </div>
                     </div>
-
-                    <!-- Widget Preview -->
-                    <div class="branding-preview">
-                        <h3 style="margin-bottom: 24px; color: var(--text-primary);">Widget Preview</h3>
-                        <div class="embedded-widget">
-                            <div class="widget-header">
-                                <div style="width: 60px; height: 60px; background: white; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: var(--primary); font-size: 24px; margin-bottom: 16px;">
-                                    <i class="fas fa-shipping-fast"></i>
-                                </div>
-                                <h3 style="margin-bottom: 8px;" id="widgetTitlePreview">Track Your Order</h3>
-                                <p style="opacity: 0.9;" id="widgetDescriptionPreview">
-                                    Enter your tracking number to check order status
-                                </p>
-                            </div>
-                            <div class="widget-body">
-                                <div class="tracking-input">
-                                    <input type="text" id="embeddedPreviewInput" placeholder="Enter tracking number">
-                                    <button type="button" id="embeddedPreviewBtn">Track</button>
-                                </div>
-                                <div id="embeddedPreviewResult" style="display: none; padding: 12px; background: #f3f4f6; border-radius: 6px; margin-top: 16px;">
-                                    <div id="embeddedResultContent"></div>
-                                </div>
-                            </div>
-                            <div class="watermark" id="embeddedWatermark">
-                                Powered by CourierDetect
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Simple Test Button -->
-                    <div style="text-align: center; margin-top: 30px;">
-                        <button class="btn btn-primary btn-lg" onclick="openStoreToSeeWidget()">
-                            <i class="fas fa-external-link-alt"></i>
-                            Open My Store to See Widget
-                        </button>
-                        <p style="color: var(--text-secondary); margin-top: 10px; font-size: 14px;">
-                            The widget appears in the bottom-right corner of your store
-                        </p>
-                    </div>
-
-                    <!-- Customization Options -->
-                    <div style="margin-top: 40px; padding-top: 30px; border-top: 1px solid var(--border);">
-                        <h3 style="margin-bottom: 20px; color: var(--text-primary);">
-                            <i class="fas fa-paint-brush"></i>
-                            Customize Widget
-                        </h3>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Widget Title</label>
-                            <input type="text" class="form-input" id="widgetTitleInput" value="Track Your Order">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Widget Description</label>
-                            <input type="text" class="form-input" id="widgetDescInput" value="Enter your tracking number to check order status">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Widget Color</label>
-                            <div class="color-picker">
-                                <div class="color-option active" style="background: #5c6ac4;" data-color="#5c6ac4"></div>
-                                <div class="color-option" style="background: #47c1bf;" data-color="#47c1bf"></div>
-                                <div class="color-option" style="background: #9c6ade;" data-color="#9c6ade"></div>
-                                <div class="color-option" style="background: #50b83c;" data-color="#50b83c"></div>
-                            </div>
-                        </div>
-                        
-                        <button class="btn btn-primary btn-full" onclick="updateWidgetSettings()">
-                            <i class="fas fa-sync"></i>
-                            Update Widget Settings
-                        </button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Branding Section -->
-            <section id="branding" class="app-section">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">
-                            <i class="fas fa-palette"></i>
-                            Custom Branding
-                        </h2>
-                        <div class="badge badge-warning">
-                            <i class="fas fa-gem"></i>
-                            30-Day Free Trial
-                        </div>
-                    </div>
-
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle"></i>
-                        Custom branding is free for 30 days. After trial, basic branding remains free.
-                    </div>
-
-                    <!-- App Branding -->
-                    <div class="form-group">
-                        <h3 style="margin-bottom: 20px; color: var(--text-primary);">
-                            <i class="fas fa-cog"></i>
-                            App Branding
-                        </h3>
-                        <div style="display: grid; gap: 20px;">
-                            <div>
-                                <label class="form-label">App Name</label>
-                                <input type="text" class="form-input" id="brandName" value="CourierDetect Pro">
-                            </div>
-                            <div>
-                                <label class="form-label">App Tagline</label>
-                                <input type="text" class="form-input" id="brandTagline" value="Smart Carrier Detection for Shopify">
-                            </div>
-                        </div>
-                    </div>
-
-                    <button class="btn btn-primary btn-full" onclick="saveBranding()">
-                        <i class="fas fa-save"></i>
-                        Save Branding Settings
-                    </button>
-                </div>
-            </section>
-
-            <!-- Settings Section -->
-            <section id="settings" class="app-section">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">
-                            <i class="fas fa-cog"></i>
-                            App Settings
-                        </h2>
-                    </div>
-
-                    <!-- General Settings -->
-                    <div class="form-group">
-                        <h3 style="margin-bottom: 20px; color: var(--text-primary);">
-                            <i class="fas fa-sliders-h"></i>
-                            General Settings
-                        </h3>
-                        <div style="display: grid; gap: 16px;">
-                            <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
-                                <input type="checkbox" id="autoDetectOrders" checked>
-                                <span>Auto-detect carriers for new orders</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
-                                <input type="checkbox" id="autoUpdateShopify" checked>
-                                <span>Auto-update tracking in Shopify</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
-                                <input type="checkbox" id="emailNotifications" checked>
-                                <span>Email notifications for failed detections</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Save Settings -->
-                    <div class="form-group">
-                        <button class="btn btn-primary btn-full" onclick="saveSettings()">
-                            <i class="fas fa-save"></i>
-                            Save All Settings
-                        </button>
-                    </div>
                 </div>
             </section>
         </main>
@@ -1543,7 +1457,7 @@
                 </div>
                 <h2 style="margin-bottom: 12px; color: var(--text-primary);">Help & Support</h2>
                 <p style="color: var(--text-secondary);">
-                    Everything you need to know about CourierDetect Pro
+                    Everything you need to know about Xroga AI
                 </p>
             </div>
 
@@ -1565,46 +1479,46 @@
         </div>
     </div>
 
-    <script>
-        // Initialize App Bridge
-        let app = null;
+<script>
+// Initialize App Bridge
+let app = null;
+
+// Function to initialize Shopify App
+function initializeShopifyApp() {
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const shop = urlParams.get('shop');
+        const host = urlParams.get('host');
         
-        // Function to initialize Shopify App
-        function initializeShopifyApp() {
-            try {
-                const urlParams = new URLSearchParams(window.location.search);
-                const shop = urlParams.get('shop');
-                const host = urlParams.get('host');
-                
-                if (shop && host) {
-                    // Initialize App Bridge
-                    app = window.appBridge.default.createApp({
-                        apiKey: '01eb5efeb620eef58d313a65bfe89e0c',
-                        shopOrigin: shop,
-                        host: host
-                    });
-                    
-                    console.log('Shopify App Bridge initialized successfully');
-                    
-                    // Create navigation menu
-                    createNavigationMenu();
-                    
-                    // Add embedded class for styling
-                    document.body.classList.add('embedded');
-                    
-                    // Auto-add widget to store (simulated)
-                    autoAddWidgetToStore(shop);
-                    
-                    return true;
-                }
-            } catch (error) {
-                console.log('App Bridge initialization failed:', error);
-                console.log('Running in standalone mode');
-            }
-            return false;
+        if (shop && host) {
+            // Initialize App Bridge
+            app = window.appBridge.default.createApp({
+                apiKey: '01eb5efeb620eef58d313a65bfe89e0c',
+                shopOrigin: shop,
+                host: host
+            });
+            
+            console.log('Shopify App Bridge initialized successfully');
+            
+            // Create navigation menu
+            createNavigationMenu();
+            
+            // Add embedded class for styling
+            document.body.classList.add('embedded');
+            
+            // Auto-add widget to store (simulated)
+            autoAddWidgetToStore(shop);
+            
+            return true;
         }
-        
-       // Create Shopify Navigation Menu
+    } catch (error) {
+        console.log('App Bridge initialization failed:', error);
+        console.log('Running in standalone mode');
+    }
+    return false;
+}
+
+// Create Shopify Navigation Menu
 function createNavigationMenu() {
     // Remove existing menu if any
     const existingMenu = document.querySelector('ui-nav-menu');
@@ -1627,12 +1541,6 @@ function createNavigationMenu() {
         <a href="#" onclick="showSection('widget'); return false;">
             <i class="fas fa-code"></i> Store Widget
         </a>
-        <a href="#" onclick="showSection('branding'); return false;">
-            <i class="fas fa-paint-brush"></i> Branding
-        </a>
-        <a href="#" onclick="showSection('settings'); return false;">
-            <i class="fas fa-cog"></i> Settings
-        </a>
         
         <!-- Privacy Policy Link -->
         <a href="privacy.html" target="_blank">
@@ -1646,643 +1554,2719 @@ function createNavigationMenu() {
     // Update navigation menu state
     updateNavMenu();
 }
+
+// Simulate auto-adding widget to store
+function autoAddWidgetToStore(shop) {
+    console.log(`Widget auto-added to store: ${shop}`);
+    // In a real app, this would use Shopify API to add script tag
+}
+
+// App State
+let appState = {
+    branding: {
+        appName: 'Xroga AI ',
+        appTagline: 'Smart Carrier Detection for Shopify',
+        primaryColor: '#5c6ac4',
+        widgetTitle: 'Track Your Order',
+        widgetDescription: 'Enter your tracking number to check order status',
+        showWatermark: true
+    },
+    settings: {
+        autoDetect: true,
+        autoUpdate: true,
+        emailNotifications: true
+    },
+    trial: {
+        active: true,
+        startDate: new Date().toISOString(),
+        endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+    }
+};
+
+// Complete Courier Detector Class
+class CompleteCourierDetector {
+    constructor() {
+        this.carriers = {};
+        this.initializeAllCarriers();
+    }
+    
+    initializeAllCarriers() {
+        // Batch 1: Global & Major Carriers
+        this.initializeBatch1();
+        // Batch 2: European Carriers
+        this.initializeBatch2();
+        // Batch 3: Asian Carriers
+        this.initializeBatch3();
+        // Batch 4: Middle East & African Carriers
+        this.initializeBatch4();
+        // Batch 5: North & South American Carriers
+        this.initializeBatch5();
+        // Batch 6: Remaining Asian & Logistics
+        this.initializeBatch6();
+        // Batch 7: Remaining European & Specialized
+        this.initializeBatch7();
         
-        // Simulate auto-adding widget to store
-        function autoAddWidgetToStore(shop) {
-            console.log(`Widget auto-added to store: ${shop}`);
-            // In a real app, this would use Shopify API to add script tag
+        console.log(`🎉 FINAL TOTAL: ${Object.keys(this.carriers).length} CARRIERS LOADED!`);
+    }
+    
+    // ========== BATCH 1: GLOBAL & MAJOR CARRIERS ==========
+    initializeBatch1() {
+        console.log("Initializing Batch 1: Global & Major Carriers (20)");
+        
+        // 1. UPS
+        this.carriers['UPS'] = {
+            patterns: [
+                { regex: /^1Z[A-Z0-9]{16}$/, name: 'UPS Standard', confidence: 100, validate: n => this.validateUPS(n), unique: true },
+                { regex: /^92\d{20}$/, name: 'UPS SurePost', confidence: 95, unique: true },
+                { regex: /^T\d{10}$/, name: 'UPS Mail Innovations', confidence: 90, unique: true }
+            ],
+            region: 'global',
+            trackingUrl: (num) => `https://www.ups.com/track?tracknum=${num}`,
+            priority: 1,
+            prefixes: ['1Z', '92', 'T'],
+            icon: 'fas fa-truck',
+            color: '#FFB600'
+        };
+
+        // 2. FedEx
+        this.carriers['FedEx'] = {
+            patterns: [
+                { regex: /^96\d{18}$/, name: 'FedEx Ground', confidence: 99, unique: true },
+                { regex: /^[0-9]{12}$/, name: 'FedEx Express', confidence: 97, validate: n => this.validateFedEx(n), unique: true },
+                { regex: /^92\d{18}$/, name: 'FedEx SmartPost', confidence: 98, unique: true }
+            ],
+            region: 'global',
+            trackingUrl: (num) => `https://www.fedex.com/fedextrack/?tracknumbers=${num}`,
+            priority: 1,
+            prefixes: ['96', '92'],
+            icon: 'fas fa-shipping-fast',
+            color: '#4D148C'
+        };
+
+        // 3. DHL
+        this.carriers['DHL'] = {
+            patterns: [
+                { regex: /^(420\d{13}|421\d{13}|422\d{13})$/, name: 'DHL eCommerce', confidence: 99, unique: true },
+                { regex: /^\d{10}$/, name: 'DHL Express', confidence: 98, validate: n => this.validateDHLExpress(n), unique: true },
+                { regex: /^[A-Z]{2}\d{9}[A-Z]{2}$/, name: 'DHL International', confidence: 94, unique: false }
+            ],
+            region: 'global',
+            trackingUrl: (num) => `https://www.dhl.com/tracking?tracking-id=${num}`,
+            priority: 1,
+            prefixes: ['420', '421', '422'],
+            icon: 'fas fa-globe',
+            color: '#FFCC00'
+        };
+
+        // 4. USPS
+        this.carriers['USPS'] = {
+            patterns: [
+                { regex: /^(94|92|93)\d{20}$/, name: 'USPS 20-digit', confidence: 98, unique: true },
+                { regex: /^[A-Z]{2}\d{9}[A-Z]{2}$/, name: 'USPS International', confidence: 97, validate: n => this.validateUSPS(n), unique: false },
+                { regex: /^420\d{31,41}$/, name: 'USPS eMRS', confidence: 96, unique: true }
+            ],
+            region: 'global',
+            trackingUrl: (num) => `https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=${num}`,
+            priority: 1,
+            prefixes: ['94', '92', '93', '420'],
+            icon: 'fas fa-mail-bulk',
+            color: '#333366'
+        };
+
+        // 5. Amazon Shipping
+        this.carriers['Amazon Shipping'] = {
+            patterns: [
+                { regex: /^AMZ\d{13}$/, name: 'Amazon Shipping', confidence: 95, unique: true },
+                { regex: /^AMA\d{13}$/, name: 'Amazon Logistics', confidence: 94, unique: true },
+                { regex: /^TBA\d{10,12}$/, name: 'Amazon TBA', confidence: 93, unique: true }
+            ],
+            region: 'global',
+            trackingUrl: (num) => `https://track.amazon.com/tracking/`,
+            priority: 2,
+            prefixes: ['AMZ', 'AMA', 'TBA'],
+            icon: 'fas fa-shopping-cart',
+            color: '#FF9900'
+        };
+
+        // 6. TNT (FedEx)
+        this.carriers['TNT (FedEx)'] = {
+            patterns: [
+                { regex: /^\d{9}$/, name: 'TNT Express', confidence: 94, unique: true },
+                { regex: /^GD\d{8}$/, name: 'TNT Global Express', confidence: 92, unique: true }
+            ],
+            region: 'global',
+            trackingUrl: (num) => `https://www.tnt.com/express/en_gb/site/shipping-tools/tracking.html?searchType=con&cons=${num}`,
+            priority: 2,
+            prefixes: ['GD'],
+            icon: 'fas fa-bolt',
+            color: '#FF0000'
+        };
+
+        // 7. EMS (Express Mail Service)
+        this.carriers['EMS (Express Mail Service)'] = {
+            patterns: [
+                { regex: /^E\d{13}$/, name: 'EMS Global', confidence: 95, unique: true },
+                { regex: /^[A-Z]{2}\d{9}[A-Z]{2}$/, name: 'EMS International', confidence: 93, unique: false }
+            ],
+            region: 'global',
+            trackingUrl: (num) => `https://www.ems.post/en/global-network/tracking/${num}`,
+            priority: 2,
+            prefixes: ['E'],
+            icon: 'fas fa-paper-plane',
+            color: '#008000'
+        };
+
+        // 8. DHL Global Forwarding
+        this.carriers['DHL Global Forwarding'] = {
+            patterns: [
+                { regex: /^GF\d{10}$/, name: 'DHL GF Standard', confidence: 92, unique: true },
+                { regex: /^SEA\d{10}$/, name: 'DHL GF Ocean', confidence: 90, unique: true }
+            ],
+            region: 'global',
+            trackingUrl: (num) => `https://logistics.dhl/global-forwarding-tracking/${num}`,
+            priority: 3,
+            prefixes: ['GF', 'SEA'],
+            icon: 'fas fa-ship',
+            color: '#FFCC00'
+        };
+
+        // 9. UPS Supply Chain
+        this.carriers['UPS Supply Chain'] = {
+            patterns: [
+                { regex: /^SC\d{12}$/, name: 'UPS SCS', confidence: 91, unique: true },
+                { regex: /^UP\d{10}$/, name: 'UPS Freight LTL', confidence: 88, unique: true }
+            ],
+            region: 'global',
+            trackingUrl: (num) => `https://www.ups.com/supplychain/technology/tracking?loc=en_US&tracknum=${num}`,
+            priority: 3,
+            prefixes: ['SC', 'UP'],
+            icon: 'fas fa-industry',
+            color: '#FFB600'
+        };
+
+        // 10. FedEx Trade Networks
+        this.carriers['FedEx Trade Networks'] = {
+            patterns: [
+                { regex: /^FT\d{12}$/, name: 'FedEx TN', confidence: 93, unique: true },
+                { regex: /^FX\d{10}$/, name: 'FedEx Cross Border', confidence: 90, unique: true }
+            ],
+            region: 'global',
+            trackingUrl: (num) => `https://ftn.fedex.com/tracking/${num}`,
+            priority: 3,
+            prefixes: ['FT', 'FX'],
+            icon: 'fas fa-handshake',
+            color: '#4D148C'
+        };
+
+        // 11. Kuehne + Nagel
+        this.carriers['Kuehne + Nagel'] = {
+            patterns: [
+                { regex: /^KN\d{10}$/, name: 'Kuehne Nagel Standard', confidence: 94, unique: true },
+                { regex: /^KNAIR\d{8}$/, name: 'K+N Air', confidence: 92, unique: true }
+            ],
+            region: 'global',
+            trackingUrl: (num) => `https://apps.kn-portal.com/tracking/public/${num}`,
+            priority: 3,
+            prefixes: ['KN', 'KNAIR'],
+            icon: 'fas fa-anchor',
+            color: '#FF69B4'
+        };
+
+        // 12. DB Schenker
+        this.carriers['DB Schenker'] = {
+            patterns: [
+                { regex: /^DB\d{10}$/, name: 'DB Schenker Standard', confidence: 93, unique: true },
+                { regex: /^DBAIR\d{8}$/, name: 'DB Schenker Air', confidence: 91, unique: true }
+            ],
+            region: 'global',
+            trackingUrl: (num) => `https://eschenker.dbschenker.com/${num}`,
+            priority: 3,
+            prefixes: ['DB', 'DBAIR'],
+            icon: 'fas fa-train',
+            color: '#FF0000'
+        };
+
+        // 13. CEVA Logistics
+        this.carriers['CEVA Logistics'] = {
+            patterns: [
+                { regex: /^CV\d{10}$/, name: 'CEVA Standard', confidence: 90, unique: true },
+                { regex: /^CVL\d{9}$/, name: 'CEVA Logistics', confidence: 88, unique: true }
+            ],
+            region: 'global',
+            trackingUrl: (num) => `https://www.cevalogistics.com/tools-resources/track-shipments/${num}`,
+            priority: 3,
+            prefixes: ['CV', 'CVL'],
+            icon: 'fas fa-warehouse',
+            color: '#00CED1'
+        };
+
+        // 14. XPO Logistics
+        this.carriers['XPO Logistics'] = {
+            patterns: [
+                { regex: /^XP\d{10}$/, name: 'XPO Standard', confidence: 91, unique: true },
+                { regex: /^XPL\d{9}$/, name: 'XPO Logistics', confidence: 89, unique: true }
+            ],
+            region: 'global',
+            trackingUrl: (num) => `https://www.xpo.com/technology/track-shipments/${num}`,
+            priority: 3,
+            prefixes: ['XP', 'XPL'],
+            icon: 'fas fa-truck-loading',
+            color: '#FF6B35'
+        };
+
+        // 15. DSV
+        this.carriers['DSV'] = {
+            patterns: [
+                { regex: /^DS\d{10}$/, name: 'DSV Standard', confidence: 92, unique: true },
+                { regex: /^DSAIR\d{8}$/, name: 'DSV Air', confidence: 90, unique: true }
+            ],
+            region: 'global',
+            trackingUrl: (num) => `https://www.dsv.com/en/track-and-trace/${num}`,
+            priority: 3,
+            prefixes: ['DS', 'DSAIR'],
+            icon: 'fas fa-plane',
+            color: '#00A8E8'
+        };
+
+        // 16. Geodis
+        this.carriers['Geodis'] = {
+            patterns: [
+                { regex: /^GD\d{10}$/, name: 'Geodis Standard', confidence: 92, unique: true },
+                { regex: /^GDL\d{9}$/, name: 'Geodis Logistics', confidence: 89, unique: true }
+            ],
+            region: 'global',
+            trackingUrl: (num) => `https://www.geodis.com/tools-resources/track-trace/${num}`,
+            priority: 3,
+            prefixes: ['GD', 'GDL'],
+            icon: 'fas fa-globe-americas',
+            color: '#8B4513'
+        };
+
+        // 17. Hellmann Worldwide
+        this.carriers['Hellmann Worldwide'] = {
+            patterns: [
+                { regex: /^HW\d{10}$/, name: 'Hellmann Standard', confidence: 91, unique: true },
+                { regex: /^HWAIR\d{8}$/, name: 'Hellmann Air', confidence: 89, unique: true }
+            ],
+            region: 'global',
+            trackingUrl: (num) => `https://www.hellmann.com/tools/tracking.do?trackingNumber=${num}`,
+            priority: 3,
+            prefixes: ['HW', 'HWAIR'],
+            icon: 'fas fa-ship',
+            color: '#000080'
+        };
+
+        // 18. Agility
+        this.carriers['Agility'] = {
+            patterns: [
+                { regex: /^AG\d{10}$/, name: 'Agility Standard', confidence: 90, unique: true },
+                { regex: /^AGL\d{9}$/, name: 'Agility Logistics', confidence: 88, unique: true }
+            ],
+            region: 'global',
+            trackingUrl: (num) => `https://agilitytransportlogistics.com/track/${num}`,
+            priority: 3,
+            prefixes: ['AG', 'AGL'],
+            icon: 'fas fa-running',
+            color: '#FFD700'
+        };
+
+        // 19. Pantos Logistics
+        this.carriers['Pantos Logistics'] = {
+            patterns: [
+                { regex: /^PN\d{12}$/, name: 'Pantos Logistics', confidence: 89, unique: true }
+            ],
+            region: 'global',
+            trackingUrl: (num) => `https://www.epantos.com/ecp/web/pr/dt/popup/dlvChaseInqPopup.do?locale=en&quickNo=${num}`,
+            priority: 3,
+            prefixes: ['PN'],
+            icon: 'fas fa-boxes',
+            color: '#800080'
+        };
+
+        // 20. DHL eCommerce
+        this.carriers['DHL eCommerce'] = {
+            patterns: [
+                { regex: /^EC\d{12}$/, name: 'DHL eCommerce', confidence: 93, unique: true },
+                { regex: /^DC\d{12}$/, name: 'DHL Parcel Connect', confidence: 91, unique: true }
+            ],
+            region: 'global',
+            trackingUrl: (num) => `https://webtrack.dhlglobalmail.com/?trackingnumber=${num}`,
+            priority: 3,
+            prefixes: ['EC', 'DC'],
+            icon: 'fas fa-shopping-bag',
+            color: '#FFCC00'
+        };
+
+        console.log(`✅ Batch 1 Complete: ${Object.keys(this.carriers).length} carriers loaded`);
+    }
+    
+    // ========== BATCH 2: EUROPEAN CARRIERS ==========
+    initializeBatch2() {
+        console.log("Initializing Batch 2: European Carriers (20)");
+        
+        // 21. Royal Mail
+        this.carriers['Royal Mail'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}GB$/, name: 'Royal Mail International', confidence: 97, unique: true },
+                { regex: /^\d{13}$/, name: 'Royal Mail Standard', confidence: 94, unique: false },
+                { regex: /^RM\d{11}[A-Z]{2}$/, name: 'Royal Mail Tracked', confidence: 96, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.royalmail.com/track-your-item#/tracking-results/${num}`,
+            priority: 2,
+            prefixes: ['RM'],
+            icon: 'fas fa-crown',
+            color: '#FFD700'
+        };
+
+        // 22. DPD
+        this.carriers['DPD'] = {
+            patterns: [
+                { regex: /^[0-9]{14}$/, name: 'DPD Standard', confidence: 96, validate: n => this.validateDPD(n), unique: true },
+                { regex: /^(01|02|03|04|09)[0-9]{12}$/, name: 'DPD Country Specific', confidence: 95, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.dpd.com/nl/en/parcel-tracking?parcelNumber=${num}`,
+            priority: 2,
+            prefixes: ['01', '02', '03', '04', '09'],
+            icon: 'fas fa-box',
+            color: '#DC143C'
+        };
+
+        // 23. GLS
+        this.carriers['GLS'] = {
+            patterns: [
+                { regex: /^[0-9]{11}$/, name: 'GLS Standard', confidence: 85, unique: true },
+                { regex: /^[A-Z]{2}[0-9]{9,11}$/, name: 'GLS International', confidence: 93, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://gls-group.eu/app/en/parcel-tracking?match=${num}`,
+            priority: 2,
+            prefixes: [],
+            icon: 'fas fa-shipping-fast',
+            color: '#FF69B4'
+        };
+
+        // 24. Hermes (Evri)
+        this.carriers['Hermes (Evri)'] = {
+            patterns: [
+                { regex: /^[0-9]{16}$/, name: 'Hermes Standard', confidence: 94, unique: true },
+                { regex: /^H\d{15}$/, name: 'Hermes Germany', confidence: 93, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.evri.com/track-a-parcel?parcelNumber=${num}`,
+            priority: 2,
+            prefixes: ['H'],
+            icon: 'fas fa-gem',
+            color: '#800080'
+        };
+
+        // 25. PostNL
+        this.carriers['PostNL'] = {
+            patterns: [
+                { regex: /^3S[A-Z0-9]{13}$/, name: 'PostNL Standard', confidence: 95, unique: true },
+                { regex: /^[A-Z]{2}\d{9}[A-Z]{2}$/, name: 'PostNL International', confidence: 93, unique: false }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.postnl.nl/en/track-and-trace/${num}`,
+            priority: 2,
+            prefixes: ['3S'],
+            icon: 'fas fa-envelope',
+            color: '#FF8C00'
+        };
+
+        // 26. Chronopost
+        this.carriers['Chronopost'] = {
+            patterns: [
+                { regex: /^\d{12}$/, name: 'Chronopost Standard', confidence: 93, unique: false },
+                { regex: /^[A-Z]{2}\d{9}FR$/, name: 'Chronopost International', confidence: 95, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.chronopost.fr/fr/chrono_suivi_search?listeNumeros=${num}`,
+            priority: 2,
+            prefixes: [],
+            icon: 'fas fa-clock',
+            color: '#FF0000'
+        };
+
+        // 27. Poste Italiane
+        this.carriers['Poste Italiane'] = {
+            patterns: [
+                { regex: /^\d{12}$/, name: 'Poste Italiane Standard', confidence: 92, unique: false },
+                { regex: /^[A-Z]{2}\d{9}IT$/, name: 'Poste Italiane International', confidence: 94, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.poste.it/en/tracking.html?trackingNumber=${num}`,
+            priority: 2,
+            prefixes: [],
+            icon: 'fas fa-flag',
+            color: '#008000'
+        };
+
+        // 28. Correos (Spain)
+        this.carriers['Correos (Spain)'] = {
+            patterns: [
+                { regex: /^\d{13}$/, name: 'Correos Standard', confidence: 91, unique: false },
+                { regex: /^[A-Z]{2}\d{9}ES$/, name: 'Correos International', confidence: 95, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.correos.es/en/es/herramientas/localizador/envios/${num}`,
+            priority: 2,
+            prefixes: [],
+            icon: 'fas fa-sun',
+            color: '#FFD700'
+        };
+
+        // 29. Deutsche Post
+        this.carriers['Deutsche Post'] = {
+            patterns: [
+                { regex: /^\d{20}$/, name: 'Deutsche Post Standard', confidence: 94, unique: true },
+                { regex: /^[A-Z]{2}\d{9}DE$/, name: 'Deutsche Post International', confidence: 96, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.dhl.de/de/privatkunden/pakete-empfangen/verfolgen.html?piececode=${num}`,
+            priority: 2,
+            prefixes: [],
+            icon: 'fas fa-envelope-open-text',
+            color: '#000000'
+        };
+
+        // 30. La Poste/Colissimo
+        this.carriers['La Poste/Colissimo'] = {
+            patterns: [
+                { regex: /^\d{13}$/, name: 'Colissimo Standard', confidence: 93, unique: false },
+                { regex: /^[A-Z]{2}\d{9}FR$/, name: 'La Poste International', confidence: 95, unique: false }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.laposte.fr/outils/suivre-vos-envois?code=${num}`,
+            priority: 2,
+            prefixes: [],
+            icon: 'fas fa-envelope-open',
+            color: '#0000FF'
+        };
+
+        // 31. PostNord
+        this.carriers['PostNord'] = {
+            patterns: [
+                { regex: /^\d{18}$/, name: 'PostNord Standard', confidence: 92, unique: true },
+                { regex: /^[A-Z]{2}\d{9}(SE|DK|NO)$/, name: 'PostNord International', confidence: 94, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://portal.postnord.com/tracking/${num}`,
+            priority: 2,
+            prefixes: [],
+            icon: 'fas fa-snowflake',
+            color: '#00CED1'
+        };
+
+        // 32. BPost
+        this.carriers['BPost'] = {
+            patterns: [
+                { regex: /^\d{13}$/, name: 'BPost Standard', confidence: 93, unique: false },
+                { regex: /^[A-Z]{2}\d{9}BE$/, name: 'BPost International', confidence: 95, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.bpost.be/en/track-and-trace/${num}`,
+            priority: 2,
+            prefixes: [],
+            icon: 'fas fa-envelope-square',
+            color: '#FF0000'
+        };
+
+        // 33. Bring (Norway)
+        this.carriers['Bring (Norway)'] = {
+            patterns: [
+                { regex: /^BG\d{12}$/, name: 'Bring Norway', confidence: 94, unique: true },
+                { regex: /^[A-Z]{2}\d{9}NO$/, name: 'Bring International', confidence: 92, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.bring.no/tracking/${num}`,
+            priority: 3,
+            prefixes: ['BG'],
+            icon: 'fas fa-snowman',
+            color: '#C0C0C0'
+        };
+
+        // 34. Itella/Posti
+        this.carriers['Itella/Posti'] = {
+            patterns: [
+                { regex: /^IT\d{12}$/, name: 'Itella Finland', confidence: 93, unique: true },
+                { regex: /^[A-Z]{2}\d{9}FI$/, name: 'Posti International', confidence: 91, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.posti.fi/en/tracking/${num}`,
+            priority: 3,
+            prefixes: ['IT'],
+            icon: 'fas fa-tree',
+            color: '#228B22'
+        };
+
+        // 35. Omniva (Estonia)
+        this.carriers['Omniva (Estonia)'] = {
+            patterns: [
+                { regex: /^OM\d{12}$/, name: 'Omniva Estonia', confidence: 92, unique: true },
+                { regex: /^[A-Z]{2}\d{9}EE$/, name: 'Omniva International', confidence: 90, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.omniva.ee/private/tracking/${num}`,
+            priority: 3,
+            prefixes: ['OM'],
+            icon: 'fas fa-bell',
+            color: '#0000CD'
+        };
+
+        // 36. Poczta Polska
+        this.carriers['Poczta Polska'] = {
+            patterns: [
+                { regex: /^PP\d{12}$/, name: 'Polish Post', confidence: 94, unique: true },
+                { regex: /^[A-Z]{2}\d{9}PL$/, name: 'Polish Post International', confidence: 92, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://emonitoring.poczta-polska.pl/${num}`,
+            priority: 3,
+            prefixes: ['PP'],
+            icon: 'fas fa-eagle',
+            color: '#FF0000'
+        };
+
+        // 37. Magyar Posta
+        this.carriers['Magyar Posta'] = {
+            patterns: [
+                { regex: /^MP\d{12}$/, name: 'Hungarian Post', confidence: 91, unique: true },
+                { regex: /^[A-Z]{2}\d{9}HU$/, name: 'Hungarian Post International', confidence: 89, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.posta.hu/nyomkovetes/${num}`,
+            priority: 3,
+            prefixes: ['MP'],
+            icon: 'fas fa-crown',
+            color: '#FFD700'
+        };
+
+        // 38. Česká pošta
+        this.carriers['Česká pošta'] = {
+            patterns: [
+                { regex: /^CP\d{12}$/, name: 'Czech Post', confidence: 92, unique: true },
+                { regex: /^[A-Z]{2}\d{9}CZ$/, name: 'Czech Post International', confidence: 90, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.posta.cz/en/tools/track-and-trace/${num}`,
+            priority: 3,
+            prefixes: ['CP'],
+            icon: 'fas fa-lion',
+            color: '#0000FF'
+        };
+
+        // 39. Slovenská pošta
+        this.carriers['Slovenská pošta'] = {
+            patterns: [
+                { regex: /^SP\d{12}$/, name: 'Slovak Post', confidence: 91, unique: true },
+                { regex: /^[A-Z]{2}\d{9}SK$/, name: 'Slovak Post International', confidence: 89, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.posta.sk/en/tracking/${num}`,
+            priority: 3,
+            prefixes: ['SP'],
+            icon: 'fas fa-mountain',
+            color: '#0000FF'
+        };
+
+        // 40. Fastway Couriers
+        this.carriers['Fastway Couriers'] = {
+            patterns: [
+                { regex: /^FW\d{10}$/, name: 'Fastway Couriers', confidence: 88, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.fastway.ie/track/${num}`,
+            priority: 3,
+            prefixes: ['FW'],
+            icon: 'fas fa-bolt',
+            color: '#FFA500'
+        };
+
+        console.log(`✅ Batch 2 Complete: ${Object.keys(this.carriers).length} total carriers loaded`);
+    }
+    
+    // ========== BATCH 3: ASIAN CARRIERS ==========
+    initializeBatch3() {
+        console.log("Initializing Batch 3: Asian Carriers (20)");
+        
+        // 41. SF Express
+        this.carriers['SF Express'] = {
+            patterns: [
+                { regex: /^SF\d{12}$/, name: 'SF Express Standard', confidence: 97, unique: true },
+                { regex: /^\d{12,13}$/, name: 'SF Numeric', confidence: 90, unique: false }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.sf-express.com/hk/en/dynamic_function/waybill/${num}`,
+            priority: 2,
+            prefixes: ['SF'],
+            icon: 'fas fa-plane',
+            color: '#FF0000'
+        };
+
+        // 42. Yamato Transport
+        this.carriers['Yamato Transport'] = {
+            patterns: [
+                { regex: /^\d{10,12}$/, name: 'Yamato Standard', confidence: 92, unique: false },
+                { regex: /^[0-9]{11}$/, name: 'Kuroneko Yamato', confidence: 94, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.kuronekoyamato.co.jp/en/track/track.html?number=${num}`,
+            priority: 2,
+            prefixes: [],
+            icon: 'fas fa-cat',
+            color: '#FF6347'
+        };
+
+        // 43. CJ Logistics
+        this.carriers['CJ Logistics'] = {
+            patterns: [
+                { regex: /^\d{10}$/, name: 'CJ Korea Domestic', confidence: 94, unique: false },
+                { regex: /^CJ\d{10}$/, name: 'CJ International', confidence: 93, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.cjlogistics.com/en/track-and-trace/tracking/${num}`,
+            priority: 2,
+            prefixes: ['CJ'],
+            icon: 'fas fa-warehouse',
+            color: '#00CED1'
+        };
+
+        // 44. Singapore Post
+        this.carriers['Singapore Post'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}SG$/, name: 'SingPost International', confidence: 96, unique: true },
+                { regex: /^R[A-Z]\d{9}[A-Z]{2}$/, name: 'Registered Mail', confidence: 95, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.singpost.com/track-items/${num}`,
+            priority: 2,
+            prefixes: ['R'],
+            icon: 'fas fa-lion',
+            color: '#FF0000'
+        };
+
+        // 45. Australia Post
+        this.carriers['Australia Post'] = {
+            patterns: [
+                { regex: /^\d{16}$/, name: 'AusPost Standard', confidence: 95, unique: true },
+                { regex: /^[A-Z]{2}\d{9}AU$/, name: 'AusPost International', confidence: 97, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://auspost.com.au/mypost/track/#/details/${num}`,
+            priority: 2,
+            prefixes: [],
+            icon: 'fas fa-koala',
+            color: '#FFD700'
+        };
+
+        // 46. Japan Post
+        this.carriers['Japan Post'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}JP$/, name: 'Japan Post International', confidence: 98, unique: true },
+                { regex: /^\d{12}$/, name: 'Yū-Pack', confidence: 94, unique: false }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://trackings.post.japanpost.jp/services/srv/search/${num}`,
+            priority: 2,
+            prefixes: [],
+            icon: 'fas fa-flag',
+            color: '#FF0000'
+        };
+
+        // 47. Korea Post
+        this.carriers['Korea Post'] = {
+            patterns: [
+                { regex: /^\d{13}$/, name: 'Korea Post Domestic', confidence: 93, unique: false },
+                { regex: /^[A-Z]{2}\d{9}KR$/, name: 'EMS Korea', confidence: 96, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://service.epost.go.kr/trace.RetrieveRegiPrclDeliv.postal/${num}`,
+            priority: 2,
+            prefixes: [],
+            icon: 'fas fa-yin-yang',
+            color: '#0000FF'
+        };
+
+        // 48. China Post EMS
+        this.carriers['China Post EMS'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}CN$/, name: 'China Post EMS', confidence: 97, unique: true },
+                { regex: /^\d{13}$/, name: 'China Post Domestic', confidence: 92, unique: false }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `http://www.ems.com.cn/qps/yjcx/${num}`,
+            priority: 2,
+            prefixes: [],
+            icon: 'fas fa-dragon',
+            color: '#FF0000'
+        };
+
+        // 49. India Post
+        this.carriers['India Post'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}IN$/, name: 'India Post International', confidence: 94, unique: true },
+                { regex: /^\d{13}$/, name: 'India Post Domestic', confidence: 90, unique: false }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.indiapost.gov.in/_layouts/15/dop.portal.tracking/trackconsignment.aspx?cons=${num}`,
+            priority: 2,
+            prefixes: [],
+            icon: 'fas fa-elephant',
+            color: '#FF9933'
+        };
+
+        // 50. Thai Post
+        this.carriers['Thai Post'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}TH$/, name: 'Thai Post EMS', confidence: 95, unique: true },
+                { regex: /^\d{13}$/, name: 'Thai Post Domestic', confidence: 91, unique: false }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://track.thailandpost.co.th/${num}`,
+            priority: 2,
+            prefixes: [],
+            icon: 'fas fa-umbrella-beach',
+            color: '#FF0000'
+        };
+
+        // 51. YTO Express
+        this.carriers['YTO Express'] = {
+            patterns: [
+                { regex: /^YT\d{12}$/, name: 'YTO Standard', confidence: 94, unique: true },
+                { regex: /^YT\d{10}$/, name: 'YTO Domestic', confidence: 92, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `http://www.yto.net.cn/english/html/index.html#tracking/${num}`,
+            priority: 3,
+            prefixes: ['YT'],
+            icon: 'fas fa-paper-plane',
+            color: '#00A8E8'
+        };
+
+        // 52. ZTO Express
+        this.carriers['ZTO Express'] = {
+            patterns: [
+                { regex: /^ZT\d{12}$/, name: 'ZTO Standard', confidence: 93, unique: true },
+                { regex: /^ZT\d{10}$/, name: 'ZTO Domestic', confidence: 91, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.zto.com/global/tracking/${num}`,
+            priority: 3,
+            prefixes: ['ZT'],
+            icon: 'fas fa-bolt',
+            color: '#FF9F1C'
+        };
+
+        // 53. J&T Express
+        this.carriers['J&T Express'] = {
+            patterns: [
+                { regex: /^JT\d{12}$/, name: 'J&T Express', confidence: 95, unique: true },
+                { regex: /^JTE\d{11}$/, name: 'J&T Economy', confidence: 92, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.jtexpress.my/track/${num}`,
+            priority: 3,
+            prefixes: ['JT', 'JTE'],
+            icon: 'fas fa-bolt',
+            color: '#FF0000'
+        };
+
+        // 54. Ninja Van
+        this.carriers['Ninja Van'] = {
+            patterns: [
+                { regex: /^NV\d{10,12}$/, name: 'Ninja Van', confidence: 94, unique: true },
+                { regex: /^NVA\d{11}$/, name: 'Ninja Van Air', confidence: 92, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.ninjavan.co/en-sg/tracking/${num}`,
+            priority: 3,
+            prefixes: ['NV', 'NVA'],
+            icon: 'fas fa-user-ninja',
+            color: '#000000'
+        };
+
+        // 55. Blue Dart
+        this.carriers['Blue Dart'] = {
+            patterns: [
+                { regex: /^BD\d{12}$/, name: 'Blue Dart India', confidence: 92, unique: true },
+                { regex: /^BD\d{10}$/, name: 'Blue Dart Domestic', confidence: 90, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.bluedart.com/trackdart/${num}`,
+            priority: 3,
+            prefixes: ['BD'],
+            icon: 'fas fa-feather-alt',
+            color: '#0000FF'
+        };
+
+        // 56. Delhivery
+        this.carriers['Delhivery'] = {
+            patterns: [
+                { regex: /^DL\d{12}$/, name: 'Delhivery India', confidence: 91, unique: true },
+                { regex: /^DLV\d{11}$/, name: 'Delhivery Express', confidence: 89, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.delhivery.com/track/${num}`,
+            priority: 3,
+            prefixes: ['DL', 'DLV'],
+            icon: 'fas fa-truck-loading',
+            color: '#FF6B35'
+        };
+
+        // 57. Sagawa Express
+        this.carriers['Sagawa Express'] = {
+            patterns: [
+                { regex: /^SG\d{12}$/, name: 'Sagawa Japan', confidence: 94, unique: true },
+                { regex: /^SGE\d{11}$/, name: 'Sagawa Express', confidence: 92, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www2.sagawa-exp.co.jp/sagawa/sgn/sgn0100/sgn0100?no=${num}`,
+            priority: 3,
+            prefixes: ['SG', 'SGE'],
+            icon: 'fas fa-crow',
+            color: '#FF0000'
+        };
+
+        // 58. Nippon Express
+        this.carriers['Nippon Express'] = {
+            patterns: [
+                { regex: /^NE\d{12}$/, name: 'Nippon Japan', confidence: 95, unique: true },
+                { regex: /^NEX\d{11}$/, name: 'Nippon Express', confidence: 93, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.nipponexpress.com/tracking/${num}`,
+            priority: 3,
+            prefixes: ['NE', 'NEX'],
+            icon: 'fas fa-flag',
+            color: '#FF0000'
+        };
+
+        // 59. Cainiao
+        this.carriers['Cainiao'] = {
+            patterns: [
+                { regex: /^LP\d{13}$/, name: 'Cainiao Logistics', confidence: 92, unique: true },
+                { regex: /^LY\d{13}$/, name: 'Cainiao Air', confidence: 90, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://global.cainiao.com/tracking/${num}`,
+            priority: 3,
+            prefixes: ['LP', 'LY'],
+            icon: 'fas fa-box-open',
+            color: '#FF0000'
+        };
+
+        // 60. 4PX
+        this.carriers['4PX'] = {
+            patterns: [
+                { regex: /^4PX\d{12}$/, name: '4PX Standard', confidence: 91, unique: true },
+                { regex: /^4PXA\d{11}$/, name: '4PX Air', confidence: 89, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.4px.com/track.html?trackingNumber=${num}`,
+            priority: 3,
+            prefixes: ['4PX', '4PXA'],
+            icon: 'fas fa-shipping-fast',
+            color: '#00FF00'
+        };
+
+        console.log(`✅ Batch 3 Complete: ${Object.keys(this.carriers).length} total carriers loaded`);
+    }
+    
+    // ========== BATCH 4: MIDDLE EAST & AFRICAN CARRIERS ==========
+    initializeBatch4() {
+        console.log("Initializing Batch 4: Middle East & African Carriers (20)");
+        
+        // 61. Aramex
+        this.carriers['Aramex'] = {
+            patterns: [
+                { regex: /^[3-5]\d{9}$/, name: 'Aramex Standard', confidence: 95, unique: true },
+                { regex: /^ARX[A-Z0-9]{7}$/, name: 'Aramex Alphanumeric', confidence: 96, unique: true }
+            ],
+            region: 'middle_east',
+            trackingUrl: (num) => `https://www.aramex.com/track/${num}`,
+            priority: 2,
+            prefixes: ['3', '4', '5', 'ARX'],
+            icon: 'fas fa-camel',
+            color: '#8B4513'
+        };
+
+        // 62. Saudi Post
+        this.carriers['Saudi Post'] = {
+            patterns: [
+                { regex: /^\d{13}$/, name: 'Saudi Post Standard', confidence: 92, unique: false },
+                { regex: /^[A-Z]{2}\d{9}SA$/, name: 'Saudi Post International', confidence: 95, unique: true }
+            ],
+            region: 'middle_east',
+            trackingUrl: (num) => `https://www.splonline.com.sa/en/tracking-shipment/${num}`,
+            priority: 2,
+            prefixes: [],
+            icon: 'fas fa-mosque',
+            color: '#006400'
+        };
+
+        // 63. Emirates Post
+        this.carriers['Emirates Post'] = {
+            patterns: [
+                { regex: /^\d{12}$/, name: 'Emirates Post Standard', confidence: 93, unique: false },
+                { regex: /^[A-Z]{2}\d{9}AE$/, name: 'Emirates Post International', confidence: 96, unique: true }
+            ],
+            region: 'middle_east',
+            trackingUrl: (num) => `https://www.emiratespost.ae/Home/TrackItem/${num}`,
+            priority: 2,
+            prefixes: [],
+            icon: 'fas fa-building',
+            color: '#FFD700'
+        };
+
+        // 64. Naqel Express
+        this.carriers['Naqel Express'] = {
+            patterns: [
+                { regex: /^NQ\d{10}$/, name: 'Naqel Saudi', confidence: 91, unique: true },
+                { regex: /^NAQ\d{11}$/, name: 'Naqel Express', confidence: 89, unique: true }
+            ],
+            region: 'middle_east',
+            trackingUrl: (num) => `https://www.naqel.com.sa/EN/Pages/naqeltracking/${num}`,
+            priority: 3,
+            prefixes: ['NQ', 'NAQ'],
+            icon: 'fas fa-truck-moving',
+            color: '#228B22'
+        };
+
+        // 65. South African Post Office
+        this.carriers['South African Post Office'] = {
+            patterns: [
+                { regex: /^ZA\d{12}$/, name: 'South Africa Post', confidence: 88, unique: true },
+                { regex: /^[A-Z]{2}\d{9}ZA$/, name: 'SA Post International', confidence: 90, unique: true }
+            ],
+            region: 'africa',
+            trackingUrl: (num) => `http://sms.postoffice.co.za/TrackingParcels/Parcel.aspx?item=${num}`,
+            priority: 3,
+            prefixes: ['ZA'],
+            icon: 'fas fa-globe-africa',
+            color: '#FF0000'
+        };
+
+        // 66. SMSA Express
+        this.carriers['SMSA Express'] = {
+            patterns: [
+                { regex: /^SM\d{12}$/, name: 'SMSA Express', confidence: 87, unique: true }
+            ],
+            region: 'middle_east',
+            trackingUrl: (num) => `https://www.smsaexpress.com/node/18/${num}`,
+            priority: 3,
+            prefixes: ['SM'],
+            icon: 'fas fa-truck',
+            color: '#FF0000'
+        };
+
+        // 67. Oman Post
+        this.carriers['Oman Post'] = {
+            patterns: [
+                { regex: /^OM\d{12}$/, name: 'Oman Post', confidence: 86, unique: true }
+            ],
+            region: 'middle_east',
+            trackingUrl: (num) => `https://www.omanpost.om/track-trace/${num}`,
+            priority: 3,
+            prefixes: ['OM'],
+            icon: 'fas fa-fort-awesome',
+            color: '#008000'
+        };
+
+        // 68. Zajil Express
+        this.carriers['Zajil Express'] = {
+            patterns: [
+                { regex: /^ZJ\d{12}$/, name: 'Zajil Express', confidence: 85, unique: true }
+            ],
+            region: 'middle_east',
+            trackingUrl: (num) => `https://zajil-express.com/track/${num}`,
+            priority: 3,
+            prefixes: ['ZJ'],
+            icon: 'fas fa-bolt',
+            color: '#FF0000'
+        };
+
+        // 69. Qatar Post
+        this.carriers['Qatar Post'] = {
+            patterns: [
+                { regex: /^QA\d{12}$/, name: 'Qatar Post', confidence: 84, unique: true }
+            ],
+            region: 'middle_east',
+            trackingUrl: (num) => `https://qatarpost.qa/TrackAndTrace?trackingNumber=${num}`,
+            priority: 3,
+            prefixes: ['QA'],
+            icon: 'fas fa-building',
+            color: '#800000'
+        };
+
+        // 70. Jordan Post
+        this.carriers['Jordan Post'] = {
+            patterns: [
+                { regex: /^JO\d{12}$/, name: 'Jordan Post', confidence: 88, unique: true }
+            ],
+            region: 'middle_east',
+            trackingUrl: (num) => `https://jordanpost.com.jo/en/individuals-services/tracking-and-following-up-items/${num}`,
+            priority: 3,
+            prefixes: ['JO'],
+            icon: 'fas fa-flag',
+            color: '#000000'
+        };
+
+        // 71. Libya Post
+        this.carriers['Libya Post'] = {
+            patterns: [
+                { regex: /^LY\d{12}$/, name: 'Libya Post', confidence: 85, unique: true }
+            ],
+            region: 'africa',
+            trackingUrl: (num) => `https://libyapost.ly/en/${num}`,
+            priority: 3,
+            prefixes: ['LY'],
+            icon: 'fas fa-sun',
+            color: '#008000'
+        };
+
+        // 72. Tunisia Post
+        this.carriers['Tunisia Post'] = {
+            patterns: [
+                { regex: /^TN\d{12}$/, name: 'Tunisia Post', confidence: 86, unique: true }
+            ],
+            region: 'africa',
+            trackingUrl: (num) => `https://www.tracktry.com/couriers/tunisia-post/${num}`,
+            priority: 3,
+            prefixes: ['TN'],
+            icon: 'fas fa-moon',
+            color: '#FF0000'
+        };
+
+        // 73. Nigeria Post
+        this.carriers['Nigeria Post'] = {
+            patterns: [
+                { regex: /^NG\d{12}$/, name: 'Nigeria Post', confidence: 83, unique: true }
+            ],
+            region: 'africa',
+            trackingUrl: (num) => `https://tracking.nipost.gov.ng/${num}`,
+            priority: 3,
+            prefixes: ['NG'],
+            icon: 'fas fa-eagle',
+            color: '#008000'
+        };
+
+        // 74. Ghana Post
+        this.carriers['Ghana Post'] = {
+            patterns: [
+                { regex: /^GH\d{12}$/, name: 'Ghana Post', confidence: 82, unique: true }
+            ],
+            region: 'africa',
+            trackingUrl: (num) => `https://epstools.ghanapost.com.gh/?trackingNumber=${num}`,
+            priority: 3,
+            prefixes: ['GH'],
+            icon: 'fas fa-star',
+            color: '#FF0000'
+        };
+
+        // 75. Egypt Post
+        this.carriers['Egypt Post'] = {
+            patterns: [
+                { regex: /^EG\d{12}$/, name: 'Egypt Post', confidence: 81, unique: true }
+            ],
+            region: 'africa',
+            trackingUrl: (num) => `https://parcelsapp.com/en/carriers/egypt-post/${num}`,
+            priority: 3,
+            prefixes: ['EG'],
+            icon: 'fas fa-pyramid',
+            color: '#FF0000'
+        };
+
+        // 76. Morocco Post
+        this.carriers['Morocco Post'] = {
+            patterns: [
+                { regex: /^MA\d{12}$/, name: 'Morocco Post', confidence: 87, unique: true }
+            ],
+            region: 'africa',
+            trackingUrl: (num) => `https://parcelsapp.com/en/carriers/morocco-post/${num}`,
+            priority: 3,
+            prefixes: ['MA'],
+            icon: 'fas fa-star-and-crescent',
+            color: '#FF0000'
+        };
+
+        // 77. Tanzania Post
+        this.carriers['Tanzania Post'] = {
+            patterns: [
+                { regex: /^TZ\d{12}$/, name: 'Tanzania Post', confidence: 84, unique: true }
+            ],
+            region: 'africa',
+            trackingUrl: (num) => `https://tracking.posta.co.tz/${num}`,
+            priority: 3,
+            prefixes: ['TZ'],
+            icon: 'fas fa-mountain',
+            color: '#008000'
+        };
+
+        // 78. Uganda Post
+        this.carriers['Uganda Post'] = {
+            patterns: [
+                { regex: /^UG\d{12}$/, name: 'Uganda Post', confidence: 83, unique: true }
+            ],
+            region: 'africa',
+            trackingUrl: (num) => `https://www.ems.post/en/global-network/tracking/${num}`,
+            priority: 3,
+            prefixes: ['UG'],
+            icon: 'fas fa-dove',
+            color: '#FFD700'
+        };
+
+        // 79. Ethiopia Post
+        this.carriers['Ethiopia Post'] = {
+            patterns: [
+                { regex: /^ET\d{12}$/, name: 'Ethiopia Post', confidence: 82, unique: true }
+            ],
+            region: 'africa',
+            trackingUrl: (num) => `https://parcelsapp.com/en/carriers/ethiopia-post/${num}`,
+            priority: 3,
+            prefixes: ['ET'],
+            icon: 'fas fa-coffee',
+            color: '#008000'
+        };
+
+        // 80. Shipa
+        this.carriers['Shipa'] = {
+            patterns: [
+                { regex: /^SH\d{12}$/, name: 'Shipa Delivery', confidence: 87, unique: true }
+            ],
+            region: 'middle_east',
+            trackingUrl: (num) => `https://shipa.com/track/${num}`,
+            priority: 3,
+            prefixes: ['SH'],
+            icon: 'fas fa-ship',
+            color: '#000080'
+        };
+
+        console.log(`✅ Batch 4 Complete: ${Object.keys(this.carriers).length} total carriers loaded`);
+    }
+    
+    // ========== BATCH 5: NORTH & SOUTH AMERICAN CARRIERS ==========
+    initializeBatch5() {
+        console.log("Initializing Batch 5: North & South American Carriers (20)");
+        
+        // 81. Canada Post
+        this.carriers['Canada Post'] = {
+            patterns: [
+                { regex: /^[0-9]{16}$/, name: 'Canada Post Domestic', confidence: 96, unique: true },
+                { regex: /^[A-Z]{2}\d{9}CA$/, name: 'Canada Post International', confidence: 94, unique: true }
+            ],
+            region: 'north_america',
+            trackingUrl: (num) => `https://www.canadapost-postescanada.ca/track-reperage/${num}`,
+            priority: 2,
+            prefixes: [],
+            icon: 'fas fa-maple-leaf',
+            color: '#FF0000'
+        };
+
+        // 82. Purolator
+        this.carriers['Purolator'] = {
+            patterns: [
+                { regex: /^PUR\d{11}$/, name: 'Purolator Express', confidence: 92, unique: true },
+                { regex: /^[0-9]{12,15}$/, name: 'Purolator Standard', confidence: 90, unique: false }
+            ],
+            region: 'north_america',
+            trackingUrl: (num) => `https://www.purolator.com/purolator/ship-track/tracking-details/${num}`,
+            priority: 3,
+            prefixes: ['PUR'],
+            icon: 'fas fa-truck',
+            color: '#6B8E23'
+        };
+
+        // 83. OnTrac
+        this.carriers['OnTrac'] = {
+            patterns: [
+                { regex: /^ONT\d{11}$/, name: 'OnTrac Ground', confidence: 88, unique: true },
+                { regex: /^C\d{11}$/, name: 'OnTrac Standard', confidence: 85, unique: true }
+            ],
+            region: 'north_america',
+            trackingUrl: (num) => `https://www.ontrac.com/trackingdetail.asp?tracking=${num}`,
+            priority: 3,
+            prefixes: ['ONT', 'C'],
+            icon: 'fas fa-bolt',
+            color: '#FF4500'
+        };
+
+        // 84. LaserShip
+        this.carriers['LaserShip'] = {
+            patterns: [
+                { regex: /^LS\d{12}$/, name: 'LaserShip', confidence: 89, unique: true },
+                { regex: /^1LS\d{11}$/, name: 'LaserShip Express', confidence: 87, unique: true }
+            ],
+            region: 'north_america',
+            trackingUrl: (num) => `https://www.lasership.com/track/${num}`,
+            priority: 3,
+            prefixes: ['LS', '1LS'],
+            icon: 'fas fa-shipping-fast',
+            color: '#0000FF'
+        };
+
+        // 85. Correios Brazil
+        this.carriers['Correios Brazil'] = {
+            patterns: [
+                { regex: /^BR\d{13}$/, name: 'Brazil Post', confidence: 91, unique: true },
+                { regex: /^[A-Z]{2}\d{9}BR$/, name: 'Brazil Post International', confidence: 93, unique: true }
+            ],
+            region: 'south_america',
+            trackingUrl: (num) => `https://www.correios.com.br/en/rastreamento-de-objetos/${num}`,
+            priority: 2,
+            prefixes: ['BR'],
+            icon: 'fas fa-globe-americas',
+            color: '#008000'
+        };
+
+        // 86. Correos Chile
+        this.carriers['Correos Chile'] = {
+            patterns: [
+                { regex: /^CL\d{12}$/, name: 'Chile Post', confidence: 90, unique: true },
+                { regex: /^[A-Z]{2}\d{9}CL$/, name: 'Chile Post International', confidence: 92, unique: true }
+            ],
+            region: 'south_america',
+            trackingUrl: (num) => `https://www.correos.cl/SitePages/seguimiento/seguimiento.aspx?envio=${num}`,
+            priority: 3,
+            prefixes: ['CL'],
+            icon: 'fas fa-mountain',
+            color: '#0000FF'
+        };
+
+        // 87. Servicios Postales Mexicanos
+        this.carriers['Servicios Postales Mexicanos'] = {
+            patterns: [
+                { regex: /^MX\d{12}$/, name: 'Mexico Post', confidence: 90, unique: true },
+                { regex: /^[A-Z]{2}\d{9}MX$/, name: 'Mexico Post International', confidence: 92, unique: true }
+            ],
+            region: 'south_america',
+            trackingUrl: (num) => `https://www.correosdemexico.gob.mx/SSLServicios/ConsultaEnvios/Default.aspx?envio=${num}`,
+            priority: 3,
+            prefixes: ['MX'],
+            icon: 'fas fa-sun',
+            color: '#006847'
+        };
+
+        // 88. Canpar
+        this.carriers['Canpar'] = {
+            patterns: [
+                { regex: /^CN\d{12}$/, name: 'Canpar', confidence: 88, unique: true }
+            ],
+            region: 'north_america',
+            trackingUrl: (num) => `https://www.canpar.com/en/tracking/track.htm?trackingNumber=${num}`,
+            priority: 3,
+            prefixes: ['CN'],
+            icon: 'fas fa-leaf',
+            color: '#008000'
+        };
+
+        // 89. Looms Express
+        this.carriers['Looms Express'] = {
+            patterns: [
+                { regex: /^LM\d{12}$/, name: 'Looms Express', confidence: 89, unique: true }
+            ],
+            region: 'north_america',
+            trackingUrl: (num) => `https://www.loomisexpress.com/loomship/Track/${num}`,
+            priority: 3,
+            prefixes: ['LM'],
+            icon: 'fas fa-spider',
+            color: '#000000'
+        };
+
+        // 90. Dicom
+        this.carriers['Dicom'] = {
+            patterns: [
+                { regex: /^DC\d{12}$/, name: 'Dicom Canada', confidence: 88, unique: true }
+            ],
+            region: 'north_america',
+            trackingUrl: (num) => `https://parcelsapp.com/en/carriers/dicom-ca/${num}`,
+            priority: 3,
+            prefixes: ['DC'],
+            icon: 'fas fa-camera',
+            color: '#FF0000'
+        };
+
+        // 91. Greyhound Package Express
+        this.carriers['Greyhound Package Express'] = {
+            patterns: [
+                { regex: /^GH\d{12}$/, name: 'Greyhound Package', confidence: 87, unique: true }
+            ],
+            region: 'north_america',
+            trackingUrl: (num) => `https://www.parcelmonitor.com/track-greyhound/${num}`,
+            priority: 3,
+            prefixes: ['GH'],
+            icon: 'fas fa-bus',
+            color: '#800080'
+        };
+
+        // 92. Speedee Delivery
+        this.carriers['Speedee Delivery'] = {
+            patterns: [
+                { regex: /^SD\d{12}$/, name: 'Speedee Delivery', confidence: 88, unique: true }
+            ],
+            region: 'north_america',
+            trackingUrl: (num) => `https://speedeedelivery.com/track-a-shipment/${num}`,
+            priority: 3,
+            prefixes: ['SD'],
+            icon: 'fas fa-bolt',
+            color: '#FF0000'
+        };
+
+        // 93. Estes Express
+        this.carriers['Estes Express'] = {
+            patterns: [
+                { regex: /^ES\d{12}$/, name: 'Estes Express', confidence: 90, unique: true }
+            ],
+            region: 'north_america',
+            trackingUrl: (num) => `https://www.estes-express.com/myestes/shipment-tracking/${num}`,
+            priority: 3,
+            prefixes: ['ES'],
+            icon: 'fas fa-truck',
+            color: '#FF0000'
+        };
+
+        // 94. IPOSTEL (Venezuela)
+        this.carriers['IPOSTEL (Venezuela)'] = {
+            patterns: [
+                { regex: /^VE\d{12}$/, name: 'IPOSTEL Venezuela', confidence: 85, unique: true }
+            ],
+            region: 'south_america',
+            trackingUrl: (num) => `https://www.parcelmonitor.com/track-ipostel/${num}`,
+            priority: 3,
+            prefixes: ['VE'],
+            icon: 'fas fa-oil-can',
+            color: '#FFCC00'
+        };
+
+        // 95. Correos Ecuador
+        this.carriers['Correos Ecuador'] = {
+            patterns: [
+                { regex: /^EC\d{12}$/, name: 'Ecuador Post', confidence: 86, unique: true }
+            ],
+            region: 'south_america',
+            trackingUrl: (num) => `https://sipostal.serviciopostal.gob.ec/Navegacion/Tracking/${num}`,
+            priority: 3,
+            prefixes: ['EC'],
+            icon: 'fas fa-globe',
+            color: '#FFD700'
+        };
+
+        // 96. Correos Bolivia
+        this.carriers['Correos Bolivia'] = {
+            patterns: [
+                { regex: /^BO\d{12}$/, name: 'Bolivia Post', confidence: 85, unique: true }
+            ],
+            region: 'south_america',
+            trackingUrl: (num) => `https://trackingbo.correos.gob.bo:8100/${num}`,
+            priority: 3,
+            prefixes: ['BO'],
+            icon: 'fas fa-mountain',
+            color: '#008000'
+        };
+
+        // 97. ParcelForce
+        this.carriers['ParcelForce'] = {
+            patterns: [
+                { regex: /^PF\d{12}$/, name: 'ParcelForce UK', confidence: 92, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.parcelforce.com/track-trace/${num}`,
+            priority: 3,
+            prefixes: ['PF'],
+            icon: 'fas fa-box',
+            color: '#FF0000'
+        };
+
+        // 98. TNT Australia
+        this.carriers['TNT Australia'] = {
+            patterns: [
+                { regex: /^TNAU\d{10}$/, name: 'TNT Australia', confidence: 89, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.tnt.com/express/en_au/site/shipping-tools/tracking.html?searchType=con&cons=${num}`,
+            priority: 3,
+            prefixes: ['TNAU'],
+            icon: 'fas fa-bolt',
+            color: '#FF0000'
+        };
+
+        // 99. Startrack
+        this.carriers['Startrack'] = {
+            patterns: [
+                { regex: /^ST\d{12}$/, name: 'Startrack Australia', confidence: 91, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.startrack.com.au/track/${num}`,
+            priority: 3,
+            prefixes: ['ST'],
+            icon: 'fas fa-star',
+            color: '#0000FF'
+        };
+
+        // 100. Parcel Monkey
+        this.carriers['Parcel Monkey'] = {
+            patterns: [
+                { regex: /^PM\d{12}$/, name: 'Parcel Monkey', confidence: 87, unique: true }
+            ],
+            region: 'global',
+            trackingUrl: (num) => `https://www.parcelmonkey.com/tracking/${num}`,
+            priority: 3,
+            prefixes: ['PM'],
+            icon: 'fas fa-monkey',
+            color: '#8B4513'
+        };
+
+        console.log(`✅ Batch 5 Complete: ${Object.keys(this.carriers).length} total carriers loaded`);
+    }
+    
+    // ========== BATCH 6: REMAINING ASIAN & LOGISTICS CARRIERS ==========
+    initializeBatch6() {
+        console.log("Initializing Batch 6: Remaining Asian & Logistics (20)");
+        
+        // 101. Lalamove
+        this.carriers['Lalamove'] = {
+            patterns: [
+                { regex: /^LLM\d{10}$/, name: 'Lalamove Delivery', confidence: 88, unique: true },
+                { regex: /^LM\d{11}$/, name: 'Lalamove Express', confidence: 86, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.aftership.com/carriers/lalamove/${num}`,
+            priority: 3,
+            prefixes: ['LLM', 'LM'],
+            icon: 'fas fa-motorcycle',
+            color: '#FF0000'
+        };
+
+        // 102. GOGOX
+        this.carriers['GOGOX'] = {
+            patterns: [
+                { regex: /^GX\d{10}$/, name: 'GOGOX Delivery', confidence: 87, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://tracking.gogox.com/${num}`,
+            priority: 3,
+            prefixes: ['GX'],
+            icon: 'fas fa-taxi',
+            color: '#00BFFF'
+        };
+
+        // 103. Professional Couriers
+        this.carriers['Professional Couriers'] = {
+            patterns: [
+                { regex: /^PC\d{12}$/, name: 'Professional Couriers', confidence: 89, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.ordertracker.com/couriers/professional-couriers/${num}`,
+            priority: 3,
+            prefixes: ['PC'],
+            icon: 'fas fa-user-tie',
+            color: '#0000FF'
+        };
+
+        // 104. ShadowFax
+        this.carriers['ShadowFax'] = {
+            patterns: [
+                { regex: /^SFX\d{11}$/, name: 'ShadowFax', confidence: 88, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://tracker.shadowfax.in/#/${num}`,
+            priority: 3,
+            prefixes: ['SFX'],
+            icon: 'fas fa-running',
+            color: '#000000'
+        };
+
+        // 105. Pidge
+        this.carriers['Pidge'] = {
+            patterns: [
+                { regex: /^PG\d{10}$/, name: 'Pidge Delivery', confidence: 87, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://tracking.pidge.in/${num}`,
+            priority: 3,
+            prefixes: ['PG'],
+            icon: 'fas fa-dove',
+            color: '#FF69B4'
+        };
+
+        // 106. Dunzo
+        this.carriers['Dunzo'] = {
+            patterns: [
+                { regex: /^DZ\d{10}$/, name: 'Dunzo Delivery', confidence: 86, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://trackthispackage.com/dunzo-delivery-tracking/${num}`,
+            priority: 3,
+            prefixes: ['DZ'],
+            icon: 'fas fa-bicycle',
+            color: '#FF4500'
+        };
+
+        // 107. Swiggy
+        this.carriers['Swiggy'] = {
+            patterns: [
+                { regex: /^SW\d{10}$/, name: 'Swiggy Delivery', confidence: 85, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://trackingstatus.in/swiggy-online/${num}`,
+            priority: 3,
+            prefixes: ['SW'],
+            icon: 'fas fa-utensils',
+            color: '#FF6B6B'
+        };
+
+        // 108. Hanjin Express
+        this.carriers['Hanjin Express'] = {
+            patterns: [
+                { regex: /^HJ\d{12}$/, name: 'Hanjin Express', confidence: 89, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://parcelsapp.com/en/carriers/hanjin-express/${num}`,
+            priority: 3,
+            prefixes: ['HJ'],
+            icon: 'fas fa-ship',
+            color: '#0000CD'
+        };
+
+        // 109. Lotte Global Logistics
+        this.carriers['Lotte Global Logistics'] = {
+            patterns: [
+                { regex: /^LG\d{12}$/, name: 'Lotte Logistics', confidence: 90, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.lotteglogis.com/english/reservation/track/${num}`,
+            priority: 3,
+            prefixes: ['LG'],
+            icon: 'fas fa-globe',
+            color: '#FF0000'
+        };
+
+        // 110. Seino Transportation
+        this.carriers['Seino Transportation'] = {
+            patterns: [
+                { regex: /^ST\d{12}$/, name: 'Seino Transport', confidence: 89, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://track.seino.co.jp/kamotsu/GempyoNoShokaiE.do?no=${num}`,
+            priority: 3,
+            prefixes: ['ST'],
+            icon: 'fas fa-truck-moving',
+            color: '#228B22'
+        };
+
+        // 111. STO Express
+        this.carriers['STO Express'] = {
+            patterns: [
+                { regex: /^ST\d{12}$/, name: 'STO Express', confidence: 93, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.parcelmonitor.com/track-sto-express/${num}`,
+            priority: 3,
+            prefixes: ['ST'],
+            icon: 'fas fa-shipping-fast',
+            color: '#FF0000'
+        };
+
+        // 112. Yunda Express
+        this.carriers['Yunda Express'] = {
+            patterns: [
+                { regex: /^YD\d{12}$/, name: 'Yunda Express', confidence: 92, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.parcelmonitor.com/track-yunda-express/${num}`,
+            priority: 3,
+            prefixes: ['YD'],
+            icon: 'fas fa-plane',
+            color: '#00BFFF'
+        };
+
+        // 113. Best Express
+        this.carriers['Best Express'] = {
+            patterns: [
+                { regex: /^BT\d{12}$/, name: 'Best Express', confidence: 91, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.bestexpressonline.com/online_tracking_result.php?tracking=${num}`,
+            priority: 3,
+            prefixes: ['BT'],
+            icon: 'fas fa-trophy',
+            color: '#FFD700'
+        };
+
+        // 114. DTDC
+        this.carriers['DTDC'] = {
+            patterns: [
+                { regex: /^DT\d{12}$/, name: 'DTDC', confidence: 90, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.dtdc.com/track-your-shipment/${num}`,
+            priority: 3,
+            prefixes: ['DT'],
+            icon: 'fas fa-truck',
+            color: '#FF0000'
+        };
+
+        // 115. Ecom Express
+        this.carriers['Ecom Express'] = {
+            patterns: [
+                { regex: /^EC\d{12}$/, name: 'Ecom Express', confidence: 89, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://trackcourier.io/ecom-express-tracking/${num}`,
+            priority: 3,
+            prefixes: ['EC'],
+            icon: 'fas fa-shopping-bag',
+            color: '#FF6B35'
+        };
+
+        // 116. XpressBees
+        this.carriers['XpressBees'] = {
+            patterns: [
+                { regex: /^XB\d{12}$/, name: 'XpressBees', confidence: 88, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.xpressbees.com/shipment/tracking/${num}`,
+            priority: 3,
+            prefixes: ['XB'],
+            icon: 'fas fa-bee',
+            color: '#FFD700'
+        };
+
+        // 117. Kerry Logistics
+        this.carriers['Kerry Logistics'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{8,10}$/, name: 'Kerry International', confidence: 93, unique: false },
+                { regex: /^\d{9,11}$/, name: 'Kerry Domestic', confidence: 88, unique: false }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.kerrylogistics.com/track-and-trace/${num}`,
+            priority: 2,
+            prefixes: [],
+            icon: 'fas fa-ship',
+            color: '#FF0000'
+        };
+
+        // 118. Pos Malaysia
+        this.carriers['Pos Malaysia'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}MY$/, name: 'Pos Malaysia International', confidence: 91, unique: true },
+                { regex: /^MY\d{12}$/, name: 'Pos Malaysia Domestic', confidence: 89, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.pos.com.my/track-trace/${num}`,
+            priority: 3,
+            prefixes: ['MY'],
+            icon: 'fas fa-flag',
+            color: '#0000FF'
+        };
+
+        // 119. Vietnam Post
+        this.carriers['Vietnam Post'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}VN$/, name: 'Vietnam Post International', confidence: 90, unique: true },
+                { regex: /^VN\d{12}$/, name: 'Vietnam Post Domestic', confidence: 88, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.vnpost.vn/en/tracking/${num}`,
+            priority: 3,
+            prefixes: ['VN'],
+            icon: 'fas fa-star',
+            color: '#FF0000'
+        };
+
+        // 120. Philippine Postal
+        this.carriers['Philippine Postal'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}PH$/, name: 'Philippine Postal International', confidence: 87, unique: true },
+                { regex: /^PH\d{12}$/, name: 'Philippine Postal Domestic', confidence: 85, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.phlpost.gov.ph/track-trace/${num}`,
+            priority: 3,
+            prefixes: ['PH'],
+            icon: 'fas fa-sun',
+            color: '#FFD700'
+        };
+
+        console.log(`✅ Batch 6 Complete: ${Object.keys(this.carriers).length} total carriers loaded`);
+    }
+    
+    // ========== BATCH 7: REMAINING EUROPEAN & SPECIALIZED ==========
+    initializeBatch7() {
+        console.log("Initializing Batch 7: Remaining European & Specialized (20)");
+        
+        // 121. Austrian Post
+        this.carriers['Austrian Post'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}AT$/, name: 'Austrian Post International', confidence: 92, unique: true },
+                { regex: /^AT\d{12}$/, name: 'Austrian Post Domestic', confidence: 90, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.post.at/en/track/${num}`,
+            priority: 3,
+            prefixes: ['AT'],
+            icon: 'fas fa-mountain',
+            color: '#FF0000'
+        };
+
+        // 122. Swiss Post
+        this.carriers['Swiss Post'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}CH$/, name: 'Swiss Post International', confidence: 93, unique: true },
+                { regex: /^CH\d{12}$/, name: 'Swiss Post Domestic', confidence: 91, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.post.ch/en/track/${num}`,
+            priority: 3,
+            prefixes: ['CH'],
+            icon: 'fas fa-plus',
+            color: '#FF0000'
+        };
+
+        // 123. Russian Post
+        this.carriers['Russian Post'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}RU$/, name: 'Russian Post International', confidence: 90, unique: true },
+                { regex: /^RU\d{13}$/, name: 'Russian Post Domestic', confidence: 88, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.pochta.ru/tracking/${num}`,
+            priority: 3,
+            prefixes: ['RU'],
+            icon: 'fas fa-bear',
+            color: '#0000FF'
+        };
+
+        // 124. Turkish Post (PTT)
+        this.carriers['Turkish Post (PTT)'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}TR$/, name: 'Turkish Post International', confidence: 89, unique: true },
+                { regex: /^TR\d{12}$/, name: 'Turkish Post Domestic', confidence: 87, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.ptt.gov.tr/en/track/${num}`,
+            priority: 3,
+            prefixes: ['TR'],
+            icon: 'fas fa-star-and-crescent',
+            color: '#FF0000'
+        };
+
+        // 125. Cyprus Post
+        this.carriers['Cyprus Post'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}CY$/, name: 'Cyprus Post International', confidence: 88, unique: true },
+                { regex: /^CY\d{12}$/, name: 'Cyprus Post Domestic', confidence: 86, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.cypruspost.post/en/track-and-trace/${num}`,
+            priority: 3,
+            prefixes: ['CY'],
+            icon: 'fas fa-sun',
+            color: '#FFD700'
+        };
+
+        // 126. Icelandic Post
+        this.carriers['Icelandic Post'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}IS$/, name: 'Icelandic Post International', confidence: 87, unique: true },
+                { regex: /^IS\d{12}$/, name: 'Icelandic Post Domestic', confidence: 85, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.postur.is/en/track/${num}`,
+            priority: 3,
+            prefixes: ['IS'],
+            icon: 'fas fa-snowflake',
+            color: '#00CED1'
+        };
+
+        // 127. Portuguese Post (CTT)
+        this.carriers['Portuguese Post (CTT)'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}PT$/, name: 'Portuguese Post International', confidence: 92, unique: true },
+                { regex: /^PT\d{12}$/, name: 'Portuguese Post Domestic', confidence: 90, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.ctt.pt/track/${num}`,
+            priority: 3,
+            prefixes: ['PT'],
+            icon: 'fas fa-anchor',
+            color: '#FF0000'
+        };
+
+        // 128. Romanian Post
+        this.carriers['Romanian Post'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}RO$/, name: 'Romanian Post International', confidence: 88, unique: true },
+                { regex: /^RO\d{12}$/, name: 'Romanian Post Domestic', confidence: 86, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.posta-romana.ro/en/track/${num}`,
+            priority: 3,
+            prefixes: ['RO'],
+            icon: 'fas fa-flag',
+            color: '#0000FF'
+        };
+
+        // 129. Indonesian Post
+        this.carriers['Indonesian Post'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}ID$/, name: 'Indonesian Post International', confidence: 88, unique: true },
+                { regex: /^ID\d{12}$/, name: 'Indonesian Post Domestic', confidence: 86, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.posindonesia.co.id/track/${num}`,
+            priority: 3,
+            prefixes: ['ID'],
+            icon: 'fas fa-archway',
+            color: '#FF0000'
+        };
+
+        // 130. New Zealand Post
+        this.carriers['New Zealand Post'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}NZ$/, name: 'NZ Post International', confidence: 94, unique: true },
+                { regex: /^\d{16}$/, name: 'NZ Post Domestic', confidence: 92, unique: true }
+            ],
+            region: 'asia',
+            trackingUrl: (num) => `https://www.nzpost.co.nz/tools/tracking/${num}`,
+            priority: 3,
+            prefixes: [],
+            icon: 'fas fa-kiwi-bird',
+            color: '#0000FF'
+        };
+
+        // 131. Post Luxembourg
+        this.carriers['Post Luxembourg'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}LU$/, name: 'Luxembourg Post International', confidence: 89, unique: true },
+                { regex: /^LU\d{12}$/, name: 'Luxembourg Post Domestic', confidence: 87, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.post.lu/en/track/${num}`,
+            priority: 3,
+            prefixes: ['LU'],
+            icon: 'fas fa-crown',
+            color: '#FF0000'
+        };
+
+        // 132. Malta Post
+        this.carriers['Malta Post'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}MT$/, name: 'Malta Post International', confidence: 88, unique: true },
+                { regex: /^MT\d{12}$/, name: 'Malta Post Domestic', confidence: 86, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.maltapost.com/track/${num}`,
+            priority: 3,
+            prefixes: ['MT'],
+            icon: 'fas fa-cross',
+            color: '#FF0000'
+        };
+
+        // 133. Bulgarian Posts
+        this.carriers['Bulgarian Posts'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}BG$/, name: 'Bulgarian Post International', confidence: 87, unique: true },
+                { regex: /^BG\d{12}$/, name: 'Bulgarian Post Domestic', confidence: 85, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.bgpost.bg/en/track/${num}`,
+            priority: 3,
+            prefixes: ['BG'],
+            icon: 'fas fa-lion',
+            color: '#008000'
+        };
+
+        // 134. Greek Post (ELTA)
+        this.carriers['Greek Post (ELTA)'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}GR$/, name: 'Greek Post International', confidence: 88, unique: true },
+                { regex: /^GR\d{12}$/, name: 'Greek Post Domestic', confidence: 86, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.elta.gr/en/track/${num}`,
+            priority: 3,
+            prefixes: ['GR'],
+            icon: 'fas fa-columns',
+            color: '#0000FF'
+        };
+
+        // 135. Irish Post (An Post)
+        this.carriers['Irish Post (An Post)'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}IE$/, name: 'Irish Post International', confidence: 90, unique: true },
+                { regex: /^IE\d{12}$/, name: 'Irish Post Domestic', confidence: 88, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.anpost.com/track/${num}`,
+            priority: 3,
+            prefixes: ['IE'],
+            icon: 'fas fa-clover',
+            color: '#008000'
+        };
+
+        // 136. Danish Post (PostNord)
+        this.carriers['Danish Post (PostNord)'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}DK$/, name: 'Danish Post International', confidence: 91, unique: true },
+                { regex: /^DK\d{12}$/, name: 'Danish Post Domestic', confidence: 89, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.postnord.dk/track/${num}`,
+            priority: 3,
+            prefixes: ['DK'],
+            icon: 'fas fa-fish',
+            color: '#FF0000'
+        };
+
+        // 137. Finnish Post (Posti)
+        this.carriers['Finnish Post (Posti)'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}FI$/, name: 'Finnish Post International', confidence: 92, unique: true },
+                { regex: /^FI\d{12}$/, name: 'Finnish Post Domestic', confidence: 90, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.posti.fi/en/track/${num}`,
+            priority: 3,
+            prefixes: ['FI'],
+            icon: 'fas fa-tree',
+            color: '#0000FF'
+        };
+
+        // 138. Norwegian Post (Posten)
+        this.carriers['Norwegian Post (Posten)'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}NO$/, name: 'Norwegian Post International', confidence: 93, unique: true },
+                { regex: /^NO\d{12}$/, name: 'Norwegian Post Domestic', confidence: 91, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.posten.no/en/track/${num}`,
+            priority: 3,
+            prefixes: ['NO'],
+            icon: 'fas fa-mountain',
+            color: '#FF0000'
+        };
+
+        // 139. Swedish Post (PostNord)
+        this.carriers['Swedish Post (PostNord)'] = {
+            patterns: [
+                { regex: /^[A-Z]{2}\d{9}SE$/, name: 'Swedish Post International', confidence: 94, unique: true },
+                { regex: /^SE\d{12}$/, name: 'Swedish Post Domestic', confidence: 92, unique: true }
+            ],
+            region: 'europe',
+            trackingUrl: (num) => `https://www.postnord.se/track/${num}`,
+            priority: 3,
+            prefixes: ['SE'],
+            icon: 'fas fa-crown',
+            color: '#0000FF'
+        };
+
+        // 140. Belgian Post (BPost) - Enhanced
+        if (this.carriers['BPost']) {
+            this.carriers['BPost'].patterns.push(
+                { regex: /^BP\d{12}$/, name: 'BPost Tracked', confidence: 92, unique: true }
+            );
+            this.carriers['BPost'].prefixes = ['BP'];
+        }
+
+        console.log(`✅ Batch 7 Complete: ${Object.keys(this.carriers).length} total carriers loaded`);
+    }
+    
+    // ========== VALIDATION FUNCTIONS ==========
+    validateFedEx(trackingNum) {
+        if (!/^\d+$/.test(trackingNum) || trackingNum.length !== 12) return true;
+        const weights = [1, 3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7];
+        let total = 0;
+        for (let i = 0; i < 11; i++) {
+            total += parseInt(trackingNum[i]) * weights[i];
+        }
+        let calculated = total % 11;
+        if (calculated === 10) calculated = 0;
+        return calculated === parseInt(trackingNum[11]);
+    }
+
+    validateDHLExpress(trackingNum) {
+        if (trackingNum.length !== 10 || !/^\d+$/.test(trackingNum)) return false;
+        const firstNine = parseInt(trackingNum.substring(0, 9));
+        const remainder = firstNine % 7;
+        return remainder === parseInt(trackingNum[9]);
+    }
+
+    validateUPS(trackingNum) {
+        if (!trackingNum.startsWith('1Z') || trackingNum.length !== 18) return true;
+        const base = trackingNum.substring(2);
+        let numeric = '';
+        for (const char of base) {
+            if (/\d/.test(char)) {
+                numeric += char;
+            } else {
+                const value = char.charCodeAt(0) - 'A'.charCodeAt(0) + 2;
+                numeric += value.toString();
+            }
+        }
+        let total = 0;
+        const reversed = numeric.split('').reverse().join('');
+        for (let i = 0; i < reversed.length; i++) {
+            let digit = parseInt(reversed[i]);
+            if (i % 2 === 0) {
+                digit *= 2;
+                if (digit > 9) digit -= 9;
+            }
+            total += digit;
+        }
+        return total % 10 === 0;
+    }
+
+    validateUSPS(trackingNum) {
+        if (!/^[A-Z]{2}\d{9}[A-Z]{2}$/.test(trackingNum)) return true;
+        const digits = trackingNum.substring(2, 11);
+        const checkDigit = parseInt(digits[8]);
+        let sum = 0;
+        for (let i = 0; i < 8; i++) {
+            sum += parseInt(digits[i]);
+        }
+        return (sum % 10) === checkDigit;
+    }
+
+    validateDPD(trackingNum) {
+        if (trackingNum.length !== 14 || !/^\d+$/.test(trackingNum)) return true;
+        const weights = [1, 3, 7, 1, 3, 7, 1, 3, 7, 1, 3, 7, 1];
+        let total = 0;
+        for (let i = 0; i < 13; i++) {
+            total += parseInt(trackingNum[i]) * weights[i];
+        }
+        let remainder = total % 11;
+        if (remainder === 10) remainder = 0;
+        return remainder === parseInt(trackingNum[13]);
+    }
+    
+    // ========== DETECTION METHODS ==========
+    detect(trackingNumber) {
+        const cleaned = this.cleanTrackingNumber(trackingNumber);
+        const results = [];
+        
+        for (const [carrierName, carrier] of Object.entries(this.carriers)) {
+            for (const pattern of carrier.patterns) {
+                if (pattern.regex.test(cleaned)) {
+                    let confidence = pattern.confidence;
+                    
+                    // Run validation if available
+                    if (pattern.validate && !pattern.validate(cleaned)) {
+                        confidence = Math.max(confidence - 10, 50);
+                    }
+                    
+                    results.push({
+                        carrier: carrierName,
+                        service: pattern.name,
+                        confidence: confidence,
+                        region: carrier.region,
+                        trackingUrl: carrier.trackingUrl(cleaned),
+                        icon: carrier.icon,
+                        color: carrier.color,
+                        priority: carrier.priority,
+                        trackingNumber: cleaned
+                    });
+                    
+                    // If pattern is unique, break after first match
+                    if (pattern.unique) break;
+                }
+            }
         }
         
-        // App State
-        let appState = {
-            branding: {
-                appName: 'CourierDetect Pro',
-                appTagline: 'Smart Carrier Detection for Shopify',
-                primaryColor: '#5c6ac4',
-                widgetTitle: 'Track Your Order',
-                widgetDescription: 'Enter your tracking number to check order status',
-                showWatermark: true
-            },
-            settings: {
-                autoDetect: true,
-                autoUpdate: true,
-                emailNotifications: true
-            },
-            trial: {
-                active: true,
-                startDate: new Date().toISOString(),
-                endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
-            }
-        };
-
-        // Carrier Database
-        const carriers = {
-            'UPS': {
-                name: 'UPS',
-                icon: 'fas fa-truck',
-                color: '#FFB600',
-                patterns: [/^1Z[0-9A-Z]{16}$/, /^[0-9]{9}$/, /^[0-9]{12}$/],
-                url: (num) => `https://www.ups.com/track?tracknum=${num}`,
-                region: 'Global',
-                service: 'Express'
-            },
-            'FedEx': {
-                name: 'FedEx',
-                icon: 'fas fa-shipping-fast',
-                color: '#4D148C',
-                patterns: [/^[0-9]{12}$/, /^[0-9]{15}$/, /^[0-9]{20}$/],
-                url: (num) => `https://www.fedex.com/fedextrack/?tracknumbers=${num}`,
-                region: 'Global',
-                service: 'Priority'
-            },
-            'DHL': {
-                name: 'DHL',
-                icon: 'fas fa-globe',
-                color: '#FFCC00',
-                patterns: [/^[0-9]{10}$/, /^(420|421|422|423)\d{13}$/],
-                url: (num) => `https://www.dhl.com/tracking?tracking-id=${num}`,
-                region: 'International',
-                service: 'Express'
-            }
-        };
-
-        // Initialize App
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize Shopify App
-            const isShopify = initializeShopifyApp();
-            
-            // Load state
-            loadState();
-            
-            // Initialize event listeners
-            initializeEventListeners();
-            
-            // Populate carrier select
-            populateCarrierSelect();
-            
-            // Load sample orders
-            loadOrders();
-            
-            // Update branding
-            updateBranding();
-            
-            // Show welcome message
-            if (isShopify) {
-                showAlert('✅ App connected to your Shopify store!', 'success');
-            } else {
-                showAlert('Running in demo mode. Install in Shopify for full features.', 'info');
-            }
+        // Sort by confidence and priority
+        results.sort((a, b) => {
+            if (b.confidence !== a.confidence) return b.confidence - a.confidence;
+            return a.priority - b.priority;
         });
+        
+        return results;
+    }
+    
+    cleanTrackingNumber(trackingNumber) {
+        return trackingNumber.toUpperCase().replace(/\s/g, '');
+    }
+}
 
-        // Event Listeners
-        function initializeEventListeners() {
-            // Back to home button
-            document.getElementById('backHomeBtn').addEventListener('click', () => showSection('dashboard'));
-            
-            // Header buttons
-            document.getElementById('helpBtn').addEventListener('click', showHelp);
-            document.getElementById('startTutorialBtn').addEventListener('click', startTutorial);
-            document.getElementById('startDetectingBtn').addEventListener('click', () => showSection('tracking'));
-            document.getElementById('closeHelpBtn').addEventListener('click', hideHelp);
-            
-            // Quick action cards
-            document.querySelectorAll('.action-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    const section = this.getAttribute('data-section');
-                    showSection(section);
-                });
-            });
-            
-            // Tracking tabs
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const tabName = this.getAttribute('data-tab');
-                    showTab(tabName);
-                });
-            });
-            
-            // Tracking example buttons
-            document.querySelectorAll('[data-example]').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const carrier = this.getAttribute('data-example');
-                    setExample(carrier);
-                });
-            });
-            
-            // Tracking detection buttons
-            document.getElementById('detectSingleBtn').addEventListener('click', detectSingle);
-            document.getElementById('detectBulkBtn').addEventListener('click', detectBulk);
-            document.getElementById('clearBulkBtn').addEventListener('click', clearBulk);
-            document.getElementById('detectAdvancedBtn').addEventListener('click', detectAdvanced);
-            
-            // Tracking result buttons
-            document.getElementById('copyTrackingBtn').addEventListener('click', copyTrackingNumber);
-            document.getElementById('openTrackingBtn').addEventListener('click', openTrackingURL);
-            document.getElementById('saveOrderBtn').addEventListener('click', saveToOrder);
-            document.getElementById('shareResultBtn').addEventListener('click', shareResult);
-            
-            // Orders buttons
-            document.getElementById('refreshOrdersBtn').addEventListener('click', loadOrders);
-            document.getElementById('autoDetectAllBtn').addEventListener('click', autoDetectAll);
-            document.getElementById('loadMoreOrdersBtn').addEventListener('click', loadMoreOrders);
-            
-            // Widget buttons
-            document.getElementById('embeddedPreviewBtn').addEventListener('click', testEmbeddedWidget);
-            document.getElementById('embeddedPreviewInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') testEmbeddedWidget();
-            });
-            
-            // Color options
-            document.querySelectorAll('.color-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    selectColor(this.getAttribute('data-color'));
-                });
-            });
-            
-            // Enter key for tracking input
-            document.getElementById('trackingInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') detectSingle();
-            });
+// Initialize detector
+const detector = new CompleteCourierDetector();
+
+// Emergency Tracking Fallbacks
+const emergencyTrackingOptions = {
+    parcelsapp: {
+        name: "ParcelsApp",
+        url: (num, carrier) => `https://parcelsapp.com/en/tracking/${num}`,
+        icon: "fas fa-box",
+        color: "#007bff",
+        priority: 1
+    },
+    track17: {
+        name: "17Track",
+        url: (num, carrier) => `https://www.17track.net/en/track?nums=${num}`,
+        icon: "fas fa-map-marker-alt",
+        color: "#dc3545",
+        priority: 2
+    },
+    aftership: {
+        name: "AfterShip",
+        url: (num, carrier) => `https://www.aftership.com/track/${num}`,
+        icon: "fas fa-rocket",
+        color: "#28a745",
+        priority: 3
+    },
+    ordertracker: {
+        name: "OrderTracker",
+        url: (num, carrier) => `https://www.ordertracker.com/track/${num}`,
+        icon: "fas fa-shipping-fast",
+        color: "#6f42c1",
+        priority: 4
+    },
+    track24: {
+        name: "Track24",
+        url: (num, carrier) => `https://track24.net/?code=${num}`,
+        icon: "fas fa-search",
+        color: "#fd7e14",
+        priority: 5
+    }
+};
+
+const carrierFallbackMapping = {
+    'UPS': 'parcelsapp',
+    'FedEx': 'aftership',
+    'DHL': 'track17',
+    'USPS': 'ordertracker',
+    'Canada Post': 'parcelsapp',
+    'Royal Mail': 'track17',
+    'Australia Post': 'aftership',
+    'Japan Post': 'track17',
+    'China Post EMS': 'track17',
+    'SF Express': 'aftership',
+    'DPD': 'parcelsapp',
+    'GLS': 'parcelsapp',
+    'Aramex': 'aftership',
+    'TNT (FedEx)': 'aftership',
+    'Purolator': 'parcelsapp',
+    'OnTrac': 'parcelsapp',
+    'LaserShip': 'parcelsapp',
+    'default': 'parcelsapp'
+};
+
+function getBestEmergencyOption(carrierName) {
+    return emergencyTrackingOptions[carrierFallbackMapping[carrierName] || carrierFallbackMapping['default']];
+}
+
+function showEmergencyTrackingOptions(trackingNumber, carrierName = null) {
+    const container = document.getElementById('emergencyOptions');
+    if (!container) return;
+    
+    let html = `
+        <div class="emergency-trackers">
+            <h5><i class="fas fa-first-aid"></i> Alternative Tracking Options</h5>
+            <p class="text-muted">Try these if the carrier's website isn't working:</p>
+            <div class="emergency-options-grid">
+    `;
+    
+    if (carrierName) {
+        const recommended = getBestEmergencyOption(carrierName);
+        html += `
+            <div class="emergency-option recommended">
+                <div class="emergency-icon" style="background:${recommended.color}">
+                    <i class="${recommended.icon}"></i>
+                </div>
+                <div class="emergency-info">
+                    <strong>${recommended.name} (Recommended)</strong>
+                    <small>Works best for ${carrierName}</small>
+                    <a href="${recommended.url(trackingNumber, carrierName)}" target="_blank" class="btn btn-sm btn-primary">
+                        Track Here <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+            </div>
+        `;
+    }
+    
+    Object.entries(emergencyTrackingOptions).forEach(([key, option]) => {
+        if (!carrierName || key !== carrierFallbackMapping[carrierName] || key !== carrierFallbackMapping['default']) {
+            html += `
+                <div class="emergency-option">
+                    <div class="emergency-icon" style="background:${option.color}">
+                        <i class="${option.icon}"></i>
+                    </div>
+                    <div class="emergency-info">
+                        <strong>${option.name}</strong>
+                        <small>Global tracker</small>
+                        <a href="${option.url(trackingNumber, carrierName)}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                            Try <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            `;
         }
+    });
+    
+    html += `
+            </div>
+            <div class="emergency-footer">
+                <small><i class="fas fa-info-circle"></i> These services track packages from 1000+ carriers worldwide</small>
+            </div>
+        </div>
+    `;
+    
+    container.innerHTML = html;
+}
 
-        // Load app state
-        function loadState() {
-            const saved = localStorage.getItem('courierDetectState');
-            if (saved) {
-                appState = JSON.parse(saved);
+function detectSingleWithFallback() {
+    const trackingNumber = document.getElementById('trackingInput').value.trim();
+    if (!trackingNumber) {
+        showAlert('Please enter a tracking number', 'warning');
+        return;
+    }
+
+    document.getElementById('loading').classList.add('active');
+    
+    setTimeout(() => {
+        const results = detector.detect(trackingNumber);
+        document.getElementById('loading').classList.remove('active');
+        
+        if (results.length > 0) {
+            const result = results[0];
+            showResult(result);
+            showEmergencyTrackingOptions(trackingNumber, result.carrier);
+            showAlert(`Detected as ${result.carrier}`, 'success');
+        } else {
+            showEmergencyTrackingOptions(trackingNumber);
+            showAlert('Could not identify carrier. Try alternative trackers below.', 'warning');
+        }
+    }, 1000);
+}
+
+// Initialize App
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Shopify App
+    const isShopify = initializeShopifyApp();
+    
+    // Load state
+    loadState();
+    
+    // Initialize event listeners
+    initializeEventListeners();
+    
+    // Populate carrier select
+    populateCarrierSelect();
+    
+    // Load sample orders
+    loadOrders();
+    
+    // Update branding
+    updateBranding();
+    
+    // Show welcome message
+    if (isShopify) {
+        showAlert('✅ App connected to your Shopify store!', 'success');
+    } else {
+        showAlert('Running in demo mode. Install in Shopify for full features.', 'info');
+    }
+});
+
+// Event Listeners
+function initializeEventListeners() {
+    // Back to home button
+    document.getElementById('backHomeBtn').addEventListener('click', () => showSection('dashboard'));
+    
+    // Header buttons
+    document.getElementById('helpBtn').addEventListener('click', showHelp);
+    document.getElementById('startTutorialBtn').addEventListener('click', startTutorial);
+    document.getElementById('startDetectingBtn').addEventListener('click', () => showSection('tracking'));
+    document.getElementById('closeHelpBtn').addEventListener('click', hideHelp);
+    
+    // Quick action cards
+    document.querySelectorAll('.action-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const section = this.getAttribute('data-section');
+            showSection(section);
+        });
+    });
+    
+    // Tracking tabs
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            const tabName = this.getAttribute('data-tab');
+            showTab(tabName);
+        });
+    });
+    
+    // Tracking example buttons
+    document.querySelectorAll('[data-example]').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const carrier = this.getAttribute('data-example');
+            setExample(carrier);
+        });
+    });
+    
+    // Tracking detection buttons - USING FALLBACK VERSION
+    document.getElementById('detectSingleBtn').addEventListener('click', detectSingleWithFallback);
+    document.getElementById('detectBulkBtn').addEventListener('click', detectBulk);
+    document.getElementById('clearBulkBtn').addEventListener('click', clearBulk);
+    document.getElementById('detectAdvancedBtn').addEventListener('click', detectAdvanced);
+    
+    // Tracking result buttons
+    document.getElementById('copyTrackingBtn').addEventListener('click', copyTrackingNumber);
+    document.getElementById('openTrackingBtn').addEventListener('click', openTrackingURL);
+    document.getElementById('saveOrderBtn').addEventListener('click', saveToOrder);
+    document.getElementById('shareResultBtn').addEventListener('click', shareResult);
+    
+    // Orders buttons
+    document.getElementById('refreshOrdersBtn').addEventListener('click', loadOrders);
+    document.getElementById('autoDetectAllBtn').addEventListener('click', autoDetectAll);
+    document.getElementById('loadMoreOrdersBtn').addEventListener('click', loadMoreOrders);
+    
+    // Enter key for tracking input
+    document.getElementById('trackingInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') detectSingleWithFallback();
+    });
+}
+
+// Load app state
+function loadState() {
+    const saved = localStorage.getItem('courierDetectState');
+    if (saved) {
+        appState = JSON.parse(saved);
+    }
+    updateBranding();
+}
+
+// Save app state
+function saveState() {
+    localStorage.setItem('courierDetectState', JSON.stringify(appState));
+}
+
+// Update branding
+function updateBranding() {
+    document.getElementById('appName').textContent = appState.branding.appName;
+    document.getElementById('appTagline').textContent = appState.branding.appTagline;
+    document.documentElement.style.setProperty('--primary', appState.branding.primaryColor);
+    
+    // Update nav menu active state
+    updateNavMenu();
+}
+
+// Update navigation menu active state
+function updateNavMenu() {
+    const navLinks = document.querySelectorAll('ui-nav-menu a');
+    const currentSection = document.querySelector('.app-section.active')?.id || 'dashboard';
+    
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        const href = link.getAttribute('href');
+        if (href && href.includes(currentSection)) {
+            link.classList.add('active');
+        }
+    });
+}
+
+// Show section
+function showSection(sectionId) {
+    // Hide all sections
+    document.querySelectorAll('.app-section').forEach(section => {
+        section.classList.remove('active');
+    });
+
+    // Show selected section
+    const section = document.getElementById(sectionId);
+    if (section) {
+        section.classList.add('active');
+        
+        // Show/hide back to home button
+        const backHomeBtn = document.getElementById('backHomeBtn');
+        if (sectionId === 'dashboard') {
+            backHomeBtn.classList.remove('visible');
+        } else {
+            backHomeBtn.classList.add('visible');
+        }
+    }
+    
+    // Update navigation menu
+    updateNavMenu();
+    
+    // Scroll to top
+    window.scrollTo(0, 0);
+}
+
+// Show tab
+function showTab(tabName) {
+    // Update tabs
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    
+    // Activate selected tab
+    const activeTab = document.querySelector(`.tab[data-tab="${tabName}"]`);
+    if (activeTab) {
+        activeTab.classList.add('active');
+    }
+    
+    // Show tab content
+    const tabContent = document.getElementById(tabName + 'Tab');
+    if (tabContent) {
+        tabContent.classList.add('active');
+    }
+}
+
+// Set example tracking number
+function setExample(carrier) {
+    const examples = {
+        'UPS': '1Z999AA1234567890',
+        'FedEx': '123456789012',
+        'DHL': '420123459876000000',
+        'USPS': '9400111899220000000000'
+    };
+    
+    document.getElementById('trackingInput').value = examples[carrier] || '123456789012';
+    document.getElementById('trackingInput').focus();
+    showAlert(`Using ${carrier} example`, 'info');
+}
+
+// Show result
+function showResult(result) {
+    document.getElementById('carrierName').textContent = result.carrier;
+    document.getElementById('detectedNumber').textContent = result.trackingNumber;
+    document.getElementById('confidenceText').textContent = result.confidence + '% Confidence';
+    document.getElementById('carrierRegion').textContent = result.region;
+    document.getElementById('serviceType').textContent = result.service;
+    document.getElementById('detectionTime').textContent = '0.8 seconds';
+    
+    const icon = document.getElementById('carrierIcon');
+    icon.innerHTML = `<i class="${result.icon}"></i>`;
+    icon.style.background = result.color;
+    
+    document.getElementById('resultsSection').classList.add('active');
+}
+
+// Copy tracking number
+function copyTrackingNumber() {
+    const trackingNumber = document.getElementById('detectedNumber').textContent;
+    navigator.clipboard.writeText(trackingNumber).then(() => {
+        showAlert('Tracking number copied', 'success');
+    });
+}
+
+// Open tracking URL
+function openTrackingURL() {
+    const trackingNumber = document.getElementById('detectedNumber').textContent;
+    const carrier = document.getElementById('carrierName').textContent;
+    if (detector.carriers[carrier]) {
+        window.open(detector.carriers[carrier].trackingUrl(trackingNumber), '_blank');
+    }
+}
+
+// Save to order
+function saveToOrder() {
+    showAlert('Tracking saved to order', 'success');
+}
+
+// Share result
+function shareResult() {
+    showAlert('Result shared', 'success');
+}
+
+// Detect bulk
+function detectBulk() {
+    const text = document.getElementById('bulkTextarea').value.trim();
+    if (!text) {
+        showAlert('Please enter tracking numbers', 'warning');
+        return;
+    }
+    
+    const numbers = text.split(/[\n,]+/).map(n => n.trim()).filter(n => n);
+    
+    if (numbers.length === 0) {
+        showAlert('No valid tracking numbers', 'warning');
+        return;
+    }
+    
+    const results = [];
+    numbers.forEach(num => {
+        const result = detector.detect(num);
+        if (result.length > 0) results.push(result[0]);
+    });
+    
+    displayBulkResults(results);
+}
+
+// Display bulk results
+function displayBulkResults(results) {
+    const container = document.getElementById('bulkResults');
+    
+    if (results.length === 0) {
+        container.innerHTML = '<div class="alert alert-warning">No valid tracking numbers found</div>';
+        return;
+    }
+    
+    let html = '<div style="margin-top: 20px;">';
+    html += '<h4 style="margin-bottom: 16px;">Found ' + results.length + ' valid tracking numbers</h4>';
+    html += '<div style="overflow-x: auto;"><table style="width: 100%; border-collapse: collapse;">';
+    html += '<thead><tr style="background: var(--surface-secondary);">';
+    html += '<th style="padding: 12px;">#</th>';
+    html += '<th style="padding: 12px;">Tracking Number</th>';
+    html += '<th style="padding: 12px;">Carrier</th>';
+    html += '<th style="padding: 12px;">Confidence</th>';
+    html += '</tr></thead><tbody>';
+    
+    results.forEach((result, index) => {
+        html += '<tr style="border-bottom: 1px solid var(--border);">';
+        html += '<td style="padding: 12px;">' + (index + 1) + '</td>';
+        html += '<td style="padding: 12px; font-family: var(--font-mono);">' + result.trackingNumber + '</td>';
+        html += '<td style="padding: 12px;">' + result.carrier + '</td>';
+        html += '<td style="padding: 12px;">' + result.confidence + '%</td>';
+        html += '</tr>';
+    });
+    
+    html += '</tbody></table></div></div>';
+    container.innerHTML = html;
+    showAlert('Detected ' + results.length + ' tracking numbers', 'success');
+}
+
+// Clear bulk
+function clearBulk() {
+    document.getElementById('bulkTextarea').value = '';
+    document.getElementById('bulkResults').innerHTML = '';
+}
+
+// Populate carrier select
+function populateCarrierSelect() {
+    const select = document.getElementById('carrierSelect');
+    select.innerHTML = '<option value="">Auto-detect (Recommended)</option>';
+    
+    Object.keys(detector.carriers).forEach(carrier => {
+        const option = document.createElement('option');
+        option.value = carrier;
+        option.textContent = carrier;
+        select.appendChild(option);
+    });
+}
+
+// Detect advanced
+function detectAdvanced() {
+    const carrier = document.getElementById('carrierSelect').value;
+    const trackingNumber = document.getElementById('advancedInput').value.trim();
+    
+    if (!trackingNumber) {
+        showAlert('Please enter tracking number', 'warning');
+        return;
+    }
+    
+    const result = detector.detect(trackingNumber);
+    const container = document.getElementById('advancedResults');
+    
+    if (result.length > 0) {
+        if (!carrier || result[0].carrier === carrier) {
+            container.innerHTML = '<div class="alert alert-success">Valid ' + result[0].carrier + ' tracking number</div>';
+        } else {
+            container.innerHTML = '<div class="alert alert-warning">Number appears to be ' + result[0].carrier + ', not ' + carrier + '</div>';
+        }
+    } else {
+        container.innerHTML = '<div class="alert alert-error">Invalid tracking number</div>';
+    }
+}
+
+// Load orders
+function loadOrders() {
+    // Simulated order data
+    const orders = [
+        { number: '#1001', customer: 'John Smith', date: '2024-01-15', status: 'fulfilled', carrier: 'UPS', tracking: '1Z999AA1234567890' },
+        { number: '#1002', customer: 'Jane Doe', date: '2024-01-14', status: 'unfulfilled', carrier: '', tracking: '' },
+        { number: '#1003', customer: 'Bob Johnson', date: '2024-01-13', status: 'fulfilled', carrier: 'FedEx', tracking: '123456789012' },
+        { number: '#1004', customer: 'Alice Brown', date: '2024-01-12', status: 'shipped', carrier: 'DHL', tracking: '420123459876' }
+    ];
+    
+    const tbody = document.getElementById('ordersTableBody');
+    let html = '';
+    
+    orders.forEach(order => {
+        html += '<tr>';
+        html += '<td>' + order.number + '</td>';
+        html += '<td>' + order.customer + '</td>';
+        html += '<td>' + order.date + '</td>';
+        html += '<td><span class="badge ' + (order.status === 'fulfilled' ? 'badge-success' : order.status === 'shipped' ? 'badge-warning' : 'badge-critical') + '">' + order.status + '</span></td>';
+        html += '<td>' + (order.carrier || '—') + '</td>';
+        html += '<td style="font-family: var(--font-mono);">' + (order.tracking || '—') + '</td>';
+        html += '<td><button class="btn btn-secondary btn-sm" onclick="detectOrder(\'' + order.tracking + '\')"><i class="fas fa-search"></i></button></td>';
+        html += '</tr>';
+    });
+    
+    tbody.innerHTML = html;
+    showAlert('Orders loaded', 'success');
+}
+
+// Detect order
+window.detectOrder = function(tracking) {
+    if (tracking) {
+        document.getElementById('trackingInput').value = tracking;
+        showSection('tracking');
+        detectSingleWithFallback();
+    } else {
+        showAlert('No tracking number available', 'warning');
+    }
+};
+
+// Auto detect all
+function autoDetectAll() {
+    showAlert('Auto-detecting carriers for all orders...', 'info');
+    setTimeout(() => {
+        showAlert('Carriers detected for 4 orders', 'success');
+    }, 2000);
+}
+
+// Load more orders
+function loadMoreOrders() {
+    showAlert('Loading more orders...', 'info');
+}
+
+// Show help
+function showHelp() {
+    document.getElementById('helpModal').classList.add('active');
+}
+
+// Hide help
+function hideHelp() {
+    document.getElementById('helpModal').classList.remove('active');
+}
+
+// Start tutorial
+function startTutorial() {
+    showSection('tracking');
+    showAlert('Welcome to the tutorial!', 'info');
+}
+
+// Show alert
+function showAlert(message, type) {
+    // Remove existing alerts
+    document.querySelectorAll('.alert-temporary').forEach(alert => alert.remove());
+    
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type} alert-temporary`;
+    alert.innerHTML = `<i class="fas fa-info-circle"></i> ${message}`;
+    alert.style.position = 'fixed';
+    alert.style.top = '20px';
+    alert.style.right = '20px';
+    alert.style.zIndex = '1001';
+    alert.style.minWidth = '300px';
+    alert.style.maxWidth = '400px';
+    document.body.appendChild(alert);
+    
+    setTimeout(() => {
+        alert.style.opacity = '0';
+        alert.style.transition = 'opacity 0.3s';
+        setTimeout(() => {
+            if (alert.parentNode) {
+                alert.remove();
             }
-            updateBranding();
-        }
+        }, 300);
+    }, 3000);
+}
+</script>
 
-        // Save app state
-        function saveState() {
-            localStorage.setItem('courierDetectState', JSON.stringify(appState));
-        }
-
-        // Update branding
-        function updateBranding() {
-            document.getElementById('appName').textContent = appState.branding.appName;
-            document.getElementById('appTagline').textContent = appState.branding.appTagline;
-            document.getElementById('widgetTitlePreview').textContent = appState.branding.widgetTitle;
-            document.getElementById('widgetDescriptionPreview').textContent = appState.branding.widgetDescription;
-            document.getElementById('brandName').value = appState.branding.appName;
-            document.getElementById('brandTagline').value = appState.branding.appTagline;
-            document.getElementById('widgetTitleInput').value = appState.branding.widgetTitle;
-            document.getElementById('widgetDescInput').value = appState.branding.widgetDescription;
-            document.documentElement.style.setProperty('--primary', appState.branding.primaryColor);
-            
-            // Update nav menu active state
-            updateNavMenu();
-        }
-
-        // Update navigation menu active state
-        function updateNavMenu() {
-            const navLinks = document.querySelectorAll('ui-nav-menu a');
-            const currentSection = document.querySelector('.app-section.active')?.id || 'dashboard';
-            
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                const href = link.getAttribute('href');
-                if (href && href.includes(currentSection)) {
-                    link.classList.add('active');
-                }
-            });
-        }
-
-        // Show section
-        function showSection(sectionId) {
-            // Hide all sections
-            document.querySelectorAll('.app-section').forEach(section => {
-                section.classList.remove('active');
-            });
-
-            // Show selected section
-            const section = document.getElementById(sectionId);
-            if (section) {
-                section.classList.add('active');
-                
-                // Show/hide back to home button
-                const backHomeBtn = document.getElementById('backHomeBtn');
-                if (sectionId === 'dashboard') {
-                    backHomeBtn.classList.remove('visible');
-                } else {
-                    backHomeBtn.classList.add('visible');
-                }
-            }
-            
-            // Update navigation menu
-            updateNavMenu();
-            
-            // Scroll to top
-            window.scrollTo(0, 0);
-        }
-
-        // Show tab
-        function showTab(tabName) {
-            // Update tabs
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            // Activate selected tab
-            const activeTab = document.querySelector(`.tab[data-tab="${tabName}"]`);
-            if (activeTab) {
-                activeTab.classList.add('active');
-            }
-            
-            // Show tab content
-            const tabContent = document.getElementById(tabName + 'Tab');
-            if (tabContent) {
-                tabContent.classList.add('active');
-            }
-        }
-
-        // Set example tracking number
-        function setExample(carrier) {
-            const examples = {
-                'UPS': '1Z999AA1234567890',
-                'FedEx': '123456789012',
-                'DHL': '420123459876000000',
-                'USPS': '9400111899220000000000'
-            };
-            
-            document.getElementById('trackingInput').value = examples[carrier] || '123456789012';
-            document.getElementById('trackingInput').focus();
-            showAlert(`Using ${carrier} example`, 'info');
-        }
-
-        // Detect single tracking number
-        function detectSingle() {
-            const trackingNumber = document.getElementById('trackingInput').value.trim();
-            if (!trackingNumber) {
-                showAlert('Please enter a tracking number', 'warning');
-                return;
-            }
-
-            document.getElementById('loading').classList.add('active');
-            
-            setTimeout(() => {
-                const result = detectCarrier(trackingNumber);
-                document.getElementById('loading').classList.remove('active');
-                
-                if (result) {
-                    showResult(result);
-                    showAlert(`Detected as ${result.carrier}`, 'success');
-                } else {
-                    showAlert('Could not identify carrier', 'error');
-                }
-            }, 1000);
-        }
-
-        // Detect carrier
-        function detectCarrier(number) {
-            const cleaned = number.toUpperCase().replace(/\s/g, '');
-            
-            for (const [name, carrier] of Object.entries(carriers)) {
-                for (const pattern of carrier.patterns) {
-                    if (pattern.test(cleaned)) {
-                        return {
-                            carrier: name,
-                            data: carrier,
-                            trackingNumber: cleaned,
-                            confidence: 99,
-                            region: carrier.region,
-                            service: carrier.service
-                        };
-                    }
-                }
-            }
-            
-            return null;
-        }
-
-        // Show result
-        function showResult(result) {
-            document.getElementById('carrierName').textContent = result.carrier;
-            document.getElementById('detectedNumber').textContent = result.trackingNumber;
-            document.getElementById('confidenceText').textContent = result.confidence + '% Confidence';
-            document.getElementById('carrierRegion').textContent = result.region;
-            document.getElementById('serviceType').textContent = result.service;
-            document.getElementById('detectionTime').textContent = '0.8 seconds';
-            
-            const icon = document.getElementById('carrierIcon');
-            icon.innerHTML = `<i class="${result.data.icon}"></i>`;
-            icon.style.background = result.data.color;
-            
-            document.getElementById('resultsSection').classList.add('active');
-        }
-
-        // Copy tracking number
-        function copyTrackingNumber() {
-            const trackingNumber = document.getElementById('detectedNumber').textContent;
-            navigator.clipboard.writeText(trackingNumber).then(() => {
-                showAlert('Tracking number copied', 'success');
-            });
-        }
-
-        // Open tracking URL
-        function openTrackingURL() {
-            const trackingNumber = document.getElementById('detectedNumber').textContent;
-            const carrier = document.getElementById('carrierName').textContent;
-            if (carriers[carrier]) {
-                window.open(carriers[carrier].url(trackingNumber), '_blank');
-            }
-        }
-
-        // Save to order
-        function saveToOrder() {
-            showAlert('Tracking saved to order', 'success');
-        }
-
-        // Share result
-        function shareResult() {
-            showAlert('Result shared', 'success');
-        }
-
-        // Detect bulk
-        function detectBulk() {
-            const text = document.getElementById('bulkTextarea').value.trim();
-            if (!text) {
-                showAlert('Please enter tracking numbers', 'warning');
-                return;
-            }
-            
-            const numbers = text.split(/[\n,]+/).map(n => n.trim()).filter(n => n);
-            
-            if (numbers.length === 0) {
-                showAlert('No valid tracking numbers', 'warning');
-                return;
-            }
-            
-            const results = [];
-            numbers.forEach(num => {
-                const result = detectCarrier(num);
-                if (result) results.push(result);
-            });
-            
-            displayBulkResults(results);
-        }
-
-        // Display bulk results
-        function displayBulkResults(results) {
-            const container = document.getElementById('bulkResults');
-            
-            if (results.length === 0) {
-                container.innerHTML = '<div class="alert alert-warning">No valid tracking numbers found</div>';
-                return;
-            }
-            
-            let html = '<div style="margin-top: 20px;">';
-            html += '<h4 style="margin-bottom: 16px;">Found ' + results.length + ' valid tracking numbers</h4>';
-            html += '<div style="overflow-x: auto;"><table style="width: 100%; border-collapse: collapse;">';
-            html += '<thead><tr style="background: var(--surface-secondary);">';
-            html += '<th style="padding: 12px;">#</th>';
-            html += '<th style="padding: 12px;">Tracking Number</th>';
-            html += '<th style="padding: 12px;">Carrier</th>';
-            html += '<th style="padding: 12px;">Confidence</th>';
-            html += '</tr></thead><tbody>';
-            
-            results.forEach((result, index) => {
-                html += '<tr style="border-bottom: 1px solid var(--border);">';
-                html += '<td style="padding: 12px;">' + (index + 1) + '</td>';
-                html += '<td style="padding: 12px; font-family: var(--font-mono);">' + result.trackingNumber + '</td>';
-                html += '<td style="padding: 12px;">' + result.carrier + '</td>';
-                html += '<td style="padding: 12px;">' + result.confidence + '%</td>';
-                html += '</tr>';
-            });
-            
-            html += '</tbody></table></div></div>';
-            container.innerHTML = html;
-            showAlert('Detected ' + results.length + ' tracking numbers', 'success');
-        }
-
-        // Clear bulk
-        function clearBulk() {
-            document.getElementById('bulkTextarea').value = '';
-            document.getElementById('bulkResults').innerHTML = '';
-        }
-
-        // Populate carrier select
-        function populateCarrierSelect() {
-            const select = document.getElementById('carrierSelect');
-            select.innerHTML = '<option value="">Auto-detect (Recommended)</option>';
-            
-            Object.keys(carriers).forEach(carrier => {
-                const option = document.createElement('option');
-                option.value = carrier;
-                option.textContent = carrier;
-                select.appendChild(option);
-            });
-        }
-
-        // Detect advanced
-        function detectAdvanced() {
-            const carrier = document.getElementById('carrierSelect').value;
-            const trackingNumber = document.getElementById('advancedInput').value.trim();
-            
-            if (!trackingNumber) {
-                showAlert('Please enter tracking number', 'warning');
-                return;
-            }
-            
-            const result = detectCarrier(trackingNumber);
-            const container = document.getElementById('advancedResults');
-            
-            if (result) {
-                if (!carrier || result.carrier === carrier) {
-                    container.innerHTML = '<div class="alert alert-success">Valid ' + result.carrier + ' tracking number</div>';
-                } else {
-                    container.innerHTML = '<div class="alert alert-warning">Number appears to be ' + result.carrier + ', not ' + carrier + '</div>';
-                }
-            } else {
-                container.innerHTML = '<div class="alert alert-error">Invalid tracking number</div>';
-            }
-        }
-
-        // Load orders
-        function loadOrders() {
-            // Simulated order data
-            const orders = [
-                { number: '#1001', customer: 'John Smith', date: '2024-01-15', status: 'fulfilled', carrier: 'UPS', tracking: '1Z999AA1234567890' },
-                { number: '#1002', customer: 'Jane Doe', date: '2024-01-14', status: 'unfulfilled', carrier: '', tracking: '' },
-                { number: '#1003', customer: 'Bob Johnson', date: '2024-01-13', status: 'fulfilled', carrier: 'FedEx', tracking: '123456789012' },
-                { number: '#1004', customer: 'Alice Brown', date: '2024-01-12', status: 'shipped', carrier: 'DHL', tracking: '420123459876' }
-            ];
-            
-            const tbody = document.getElementById('ordersTableBody');
-            let html = '';
-            
-            orders.forEach(order => {
-                html += '<tr>';
-                html += '<td>' + order.number + '</td>';
-                html += '<td>' + order.customer + '</td>';
-                html += '<td>' + order.date + '</td>';
-                html += '<td><span class="badge ' + (order.status === 'fulfilled' ? 'badge-success' : order.status === 'shipped' ? 'badge-warning' : 'badge-critical') + '">' + order.status + '</span></td>';
-                html += '<td>' + (order.carrier || '—') + '</td>';
-                html += '<td style="font-family: var(--font-mono);">' + (order.tracking || '—') + '</td>';
-                html += '<td><button class="btn btn-secondary btn-sm" onclick="detectOrder(\'' + order.tracking + '\')"><i class="fas fa-search"></i></button></td>';
-                html += '</tr>';
-            });
-            
-            tbody.innerHTML = html;
-            showAlert('Orders loaded', 'success');
-        }
-
-        // Detect order
-        window.detectOrder = function(tracking) {
-            if (tracking) {
-                document.getElementById('trackingInput').value = tracking;
-                showSection('tracking');
-                detectSingle();
-            } else {
-                showAlert('No tracking number available', 'warning');
-            }
-        };
-
-        // Auto detect all
-        function autoDetectAll() {
-            showAlert('Auto-detecting carriers for all orders...', 'info');
-            setTimeout(() => {
-                showAlert('Carriers detected for 4 orders', 'success');
-            }, 2000);
-        }
-
-        // Load more orders
-        function loadMoreOrders() {
-            showAlert('Loading more orders...', 'info');
-        }
-
-        // Test embedded widget
-        function testEmbeddedWidget() {
-            const tracking = document.getElementById('embeddedPreviewInput').value;
-            const resultDiv = document.getElementById('embeddedPreviewResult');
-            
-            if (!tracking) {
-                showAlert('Enter tracking number', 'warning');
-                return;
-            }
-            
-            const result = detectCarrier(tracking);
-            if (result) {
-                document.getElementById('embeddedResultContent').innerHTML = `
-                    <strong>✓ Carrier Detected:</strong> ${result.carrier}<br>
-                    <strong>Tracking Number:</strong> ${result.trackingNumber}<br>
-                    <strong>Service:</strong> ${result.service} (${result.region})
-                `;
-                resultDiv.style.display = 'block';
-                showAlert(`Detected as ${result.carrier}`, 'success');
-            } else {
-                document.getElementById('embeddedResultContent').innerHTML = `
-                    <strong>❌ Could not identify carrier</strong><br>
-                    Please check the tracking number and try again.
-                `;
-                resultDiv.style.display = 'block';
-                showAlert('Tracking number not recognized', 'warning');
-            }
-        }
-
-        // Open store to see widget
-        function openStoreToSeeWidget() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const shop = urlParams.get('shop');
-            
-            if (shop) {
-                window.open(`https://${shop}`, '_blank');
-                showAlert('Opening your store...', 'info');
-            } else {
-                showAlert('Demo mode: In Shopify, this would open your store', 'info');
-            }
-        }
-
-        // Select color
-        function selectColor(color) {
-            document.querySelectorAll('.color-option').forEach(option => {
-                option.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            appState.branding.primaryColor = color;
-            updateBranding();
-            saveState();
-            showAlert('Color theme updated', 'success');
-        }
-
-        // Save branding
-        function saveBranding() {
-            appState.branding.appName = document.getElementById('brandName').value;
-            appState.branding.appTagline = document.getElementById('brandTagline').value;
-            appState.branding.widgetTitle = document.getElementById('widgetTitleInput').value;
-            appState.branding.widgetDescription = document.getElementById('widgetDescInput').value;
-            
-            updateBranding();
-            saveState();
-            showAlert('Branding saved', 'success');
-        }
-
-        // Update widget settings
-        function updateWidgetSettings() {
-            appState.branding.widgetTitle = document.getElementById('widgetTitleInput').value;
-            appState.branding.widgetDescription = document.getElementById('widgetDescInput').value;
-            
-            updateBranding();
-            saveState();
-            showAlert('Widget settings updated', 'success');
-        }
-
-        // Save settings
-        function saveSettings() {
-            appState.settings.autoDetect = document.getElementById('autoDetectOrders').checked;
-            appState.settings.autoUpdate = document.getElementById('autoUpdateShopify').checked;
-            appState.settings.emailNotifications = document.getElementById('emailNotifications').checked;
-            
-            saveState();
-            showAlert('Settings saved', 'success');
-        }
-
-        // Show help
-        function showHelp() {
-            document.getElementById('helpModal').classList.add('active');
-        }
-
-        // Hide help
-        function hideHelp() {
-            document.getElementById('helpModal').classList.remove('active');
-        }
-
-        // Start tutorial
-        function startTutorial() {
-            showSection('tracking');
-            showAlert('Welcome to the tutorial!', 'info');
-        }
-
-        // Show alert
-        function showAlert(message, type) {
-            // Remove existing alerts
-            document.querySelectorAll('.alert-temporary').forEach(alert => alert.remove());
-            
-            const alert = document.createElement('div');
-            alert.className = `alert alert-${type} alert-temporary`;
-            alert.innerHTML = `<i class="fas fa-info-circle"></i> ${message}`;
-            alert.style.position = 'fixed';
-            alert.style.top = '20px';
-            alert.style.right = '20px';
-            alert.style.zIndex = '1001';
-            alert.style.minWidth = '300px';
-            alert.style.maxWidth = '400px';
-            document.body.appendChild(alert);
-            
-            setTimeout(() => {
-                alert.style.opacity = '0';
-                alert.style.transition = 'opacity 0.3s';
-                setTimeout(() => {
-                    if (alert.parentNode) {
-                        alert.remove();
-                    }
-                }, 300);
-            }, 3000);
-        }
-    </script>
 </body>
 </html>
