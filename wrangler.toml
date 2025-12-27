@@ -1,5 +1,5 @@
 # wrangler.toml - Cloudflare Worker Configuration for CourierDetect Pro
-name = "courierdetect"
+name = "courierdetect-auth"
 main = "worker.js"
 compatibility_date = "2024-12-21"
 
