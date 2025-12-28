@@ -1,0 +1,26 @@
+# shopify.app.toml
+name = "Xroga AI Order Tracking"
+client_id = "01eb5efeb620eef58d313a65bfe89e0c"
+
+[auth]
+redirect_urls = [
+  "https://courierdetect-auth.evanderthorne-help.workers.dev/auth/callback"
+]
+
+[access_scopes]
+scopes = "read_orders,write_orders,read_products"
+
+[webhooks]
+api_version = "2024-01"
+
+[[webhooks.subscriptions]]
+topic = "customers/data_request"
+address = "https://courierdetect-auth.evanderthorne-help.workers.dev/webhooks/customers/data_request"
+
+[[webhooks.subscriptions]]
+topic = "customers/redact"
+address = "https://courierdetect-auth.evanderthorne-help.workers.dev/webhooks/customers/redact"
+
+[[webhooks.subscriptions]]
+topic = "shop/redact"
+address = "https://courierdetect-auth.evanderthorne-help.workers.dev/webhooks/shop/redact"
