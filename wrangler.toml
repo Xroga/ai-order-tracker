@@ -1,25 +1,13 @@
-# wrangler.toml - UPDATED FOR XROGA AI TRACKING
-name = "xroga-ai-order-tracking"
-main = "functions/webhooks.js"  # Changed from worker.js
+# wrangler.toml - CORRECTED
+name = "courierdetect-auth"  # MUST match existing worker
+main = "worker.js"           # Must be worker.js, not functions/webhooks.js
 compatibility_date = "2024-01-01"
 
 # Environment variables
 [vars]
-APP_NAME = "Xroga AI Order Tracking"
-FRONTEND_URL = "https://ai-order-trackers.pages.dev"  # CORRECTED
+APP_NAME = "Xroga AI Tracking"
+FRONTEND_URL = "https://ai-order-trackers.pages.dev"
+SHOPIFY_SCOPES = "read_orders,write_orders,read_products"
 
-# Production environment
 [env.production]
-name = "xroga-ai-tracking-prod"
-workers_dev = true  # Add this to deploy to workers.dev
-
-[env.production.vars]
-FRONTEND_URL = "https://ai-order-trackers.pages.dev"
-
-# Development environment
-[env.development]
-name = "xroga-ai-tracking-dev"
 workers_dev = true
-
-[env.development.vars]
-FRONTEND_URL = "https://ai-order-trackers.pages.dev"
