@@ -1,11 +1,11 @@
 # wrangler.toml - UPDATED FOR XROGA AI TRACKING
-name = "xroga-ai-tracking"
+name = "xroga-ai-order-tracking"
 main = "functions/webhooks.js"  # Changed from worker.js
 compatibility_date = "2024-01-01"
 
 # Environment variables
 [vars]
-APP_NAME = "Xroga AI Tracking"
+APP_NAME = "Xroga AI Order Tracking"
 FRONTEND_URL = "https://ai-order-trackers.pages.dev"  # CORRECTED
 
 # Production environment
