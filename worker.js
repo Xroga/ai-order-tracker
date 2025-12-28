@@ -1,4 +1,4 @@
-// worker.js - COMBINED OAuth + Webhooks
+// worker.js - FIXED with exact webhook paths
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
@@ -20,7 +20,7 @@ export default {
       }
       
       const state = crypto.randomUUID();
-      const redirectUri = `${env.FRONTEND_URL}/auth/callback`;
+      const redirectUri = `${env.FRONTEND_URL || "https://ai-order-trackers.pages.dev"}/auth/callback`;
       
       const authUrl = new URL(`https://${shop}/admin/oauth/authorize`);
       authUrl.searchParams.set("client_id", env.SHOPIFY_API_KEY);
@@ -62,7 +62,7 @@ export default {
         await registerWebhooks(shop, access_token, env);
         
         // Redirect to app
-        const frontendUrl = `${env.FRONTEND_URL}?shop=${encodeURIComponent(shop)}&token=${encodeURIComponent(access_token)}`;
+        const frontendUrl = `${env.FRONTEND_URL || "https://ai-order-trackers.pages.dev"}?shop=${encodeURIComponent(shop)}&token=${encodeURIComponent(access_token)}`;
         return Response.redirect(frontendUrl);
         
       } catch (error) {
@@ -71,9 +71,17 @@ export default {
       }
     }
     
-    // 4. WEBHOOKS - Mandatory compliance webhooks
-    if (path.startsWith("/webhooks/") && method === "POST") {
-      return handleWebhook(request, env);
+    // 4. ⭐⭐⭐ EXACT WEBHOOK PATHS ⭐⭐⭐
+    if (method === "POST") {
+      if (path === "/webhooks/customers/data_request") {
+        return handleWebhook("customers/data_request", request, env);
+      }
+      if (path === "/webhooks/customers/redact") {
+        return handleWebhook("customers/redact", request, env);
+      }
+      if (path === "/webhooks/shop/redact") {
+        return handleWebhook("shop/redact", request, env);
+      }
     }
     
     // 5. Default response
@@ -83,8 +91,8 @@ export default {
   }
 };
 
-// Webhook Handler
-async function handleWebhook(request, env) {
+// Webhook Handler - FIXED
+async function handleWebhook(expectedTopic, request, env) {
   try {
     // 1. Get HMAC header
     const hmacHeader = request.headers.get('X-Shopify-Hmac-Sha256');
@@ -101,7 +109,7 @@ async function handleWebhook(request, env) {
     // 3. Get raw body
     const rawBody = await request.text();
     
-    // 4. Verify HMAC (MANDATORY)
+    // 4. Verify HMAC
     const encoder = new TextEncoder();
     const key = await crypto.subtle.importKey(
       'raw',
@@ -119,31 +127,25 @@ async function handleWebhook(request, env) {
       return new Response('Invalid HMAC signature', { status: 401 });
     }
     
-    // 5. Get webhook topic
-    const topic = request.headers.get('X-Shopify-Topic');
+    // 5. Get actual topic
+    const actualTopic = request.headers.get('X-Shopify-Topic');
     const shopDomain = request.headers.get('X-Shopify-Shop-Domain');
     const body = JSON.parse(rawBody);
     
-    console.log(`✅ Webhook received: ${topic} from ${shopDomain}`);
+    console.log(`✅ Webhook received: ${actualTopic} from ${shopDomain}`);
     
-    // 6. Process based on topic
-    if (topic === 'customers/data_request') {
-      console.log('📋 GDPR Data Request:', body);
-    } else if (topic === 'customers/redact') {
-      console.log('🗑️ GDPR Customer Redact:', body);
-    } else if (topic === 'shop/redact') {
-      console.log('🏬 GDPR Shop Redact:', body);
-    }
-    
-    // 7. ALWAYS return 200 OK
+    // 6. Return 200 OK
     return new Response(JSON.stringify({
       success: true,
       app: "Xroga AI Tracking",
-      webhook: topic,
+      webhook: actualTopic,
       timestamp: new Date().toISOString()
     }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      }
     });
     
   } catch (error) {
@@ -152,7 +154,7 @@ async function handleWebhook(request, env) {
   }
 }
 
-// Register webhooks after app installation
+// Register webhooks
 async function registerWebhooks(shop, accessToken, env) {
   const webhooks = [
     {
