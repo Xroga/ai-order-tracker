@@ -157,17 +157,17 @@ async function registerWebhooks(shop, accessToken, env) {
   const webhooks = [
     {
       topic: 'customers/data_request',
-      address: `https://courierdetect-auth.YOUR_SUBDOMAIN.workers.dev/webhooks/customers/data_request`,
+      address: `https://courierdetect-auth.evanderthorne-help.workers.dev/webhooks/customers/data_request`,
       format: 'json'
     },
     {
       topic: 'customers/redact',
-      address: `https://courierdetect-auth.YOUR_SUBDOMAIN.workers.dev/webhooks/customers/redact`,
+      address: `https://courierdetect-auth.evanderthorne-help.workers.dev/webhooks/customers/redact`,
       format: 'json'
     },
     {
       topic: 'shop/redact',
-      address: `https://courierdetect-auth.YOUR_SUBDOMAIN.workers.dev/webhooks/shop/redact`,
+      address: `https://courierdetect-auth.evanderthorne-help.workers.dev/webhooks/shop/redact`,
       format: 'json'
     }
   ];
