@@ -1,0 +1,25 @@
+name: Deploy Shopify Configuration
+
+on:
+  push:
+    paths:
+      - 'shopify.app.toml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy Shopify Config
+        env:
+          SHOPIFY_CLI_TOKEN: ${{ secrets.SHOPIFY_CLI_TOKEN }}
+        run: |
+          # Install Shopify CLI
+          npm install -g @shopify/cli
+          
+          # Deploy configuration
+          shopify app config link --token=$SHOPIFY_CLI_TOKEN
+          shopify app deploy --config-only
