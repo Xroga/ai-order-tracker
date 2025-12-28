@@ -2,17 +2,26 @@
 name = "Xroga AI Order Tracking"
 client_id = "01eb5efeb620eef58d313a65bfe89e0c"
 
+# Your app URL
+application_url = "https://ai-order-trackers.pages.dev"
+embedded = true
+
+# Auth configuration
 [auth]
 redirect_urls = [
-  "https://courierdetect-auth.evanderthorne-help.workers.dev/auth/callback"
+  "https://courierdetect-auth.evanderthorne-help.workers.dev/auth/callback",
+  "https://ai-order-trackers.pages.dev/auth/callback"
 ]
 
+# App permissions
 [access_scopes]
-scopes = "read_orders,write_orders,read_products"
+scopes = "read_products,read_orders,write_orders"
 
+# ⭐⭐⭐⭐ THIS IS WHAT YOU'RE MISSING ⭐⭐⭐⭐
 [webhooks]
-api_version = "2024-01"
+api_version = "2024-07"
 
+# Compliance webhooks (MANDATORY)
 [[webhooks.subscriptions]]
 topic = "customers/data_request"
 address = "https://courierdetect-auth.evanderthorne-help.workers.dev/webhooks/customers/data_request"
@@ -24,3 +33,12 @@ address = "https://courierdetect-auth.evanderthorne-help.workers.dev/webhooks/cu
 [[webhooks.subscriptions]]
 topic = "shop/redact"
 address = "https://courierdetect-auth.evanderthorne-help.workers.dev/webhooks/shop/redact"
+
+# Build configuration (for Cloudflare Pages)
+[build]
+command = "echo 'No build required'"
+publish = "public/"
+
+# Environment-specific configs
+[env.development]
+application_url = "https://ai-order-trackers.pages.dev"
