@@ -1,5 +1,5 @@
 # shopify.app.toml
-name = "Xroga AI Order Tracking"
+name = "Xroga AI Tracking"
 client_id = "01eb5efeb620eef58d313a65bfe89e0c"
 
 # Your app URL
@@ -17,22 +17,19 @@ redirect_urls = [
 [access_scopes]
 scopes = "read_products,read_orders,write_orders"
 
-# ⭐⭐⭐⭐ THIS IS WHAT YOU'RE MISSING ⭐⭐⭐⭐
+# Webhooks configuration - FIXED VERSION
 [webhooks]
 api_version = "2024-07"
 
-# Compliance webhooks (MANDATORY)
+# Mandatory compliance webhooks (REQUIRED for App Store submission)
 [[webhooks.subscriptions]]
-topic = "customers/data_request"
-address = "https://courierdetect-auth.evanderthorne-help.workers.dev/webhooks/customers/data_request"
+compliance_topics = ["customers/data_request", "customers/redact", "shop/redact"]
+uri = "https://courierdetect-auth.evanderthorne-help.workers.dev/webhooks/compliance"
 
+# Business logic webhook for order tracking
 [[webhooks.subscriptions]]
-topic = "customers/redact"
-address = "https://courierdetect-auth.evanderthorne-help.workers.dev/webhooks/customers/redact"
-
-[[webhooks.subscriptions]]
-topic = "shop/redact"
-address = "https://courierdetect-auth.evanderthorne-help.workers.dev/webhooks/shop/redact"
+topic = "orders/create"
+address = "https://courierdetect-auth.evanderthorne-help.workers.dev/webhooks/orders/create"
 
 # Build configuration (for Cloudflare Pages)
 [build]
