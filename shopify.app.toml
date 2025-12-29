@@ -1,40 +1,37 @@
-# shopify.app.toml
+# shopify.app.toml - FINAL CORRECT VERSION
 name = "Xroga AI Tracking"
 client_id = "01eb5efeb620eef58d313a65bfe89e0c"
 
-# ✅ Frontend on Pages.dev (your app interface)
+# Your app URL (where your app loads in Shopify Admin)
 application_url = "https://ai-order-trackers.pages.dev"
 embedded = true
 
-# ✅ Auth configuration - only Workers (it handles OAuth)
+# Auth configuration
 [auth]
+# ONLY use your Workers domain for OAuth
 redirect_urls = [
   "https://courierdetect.evanderthorne-help.workers.dev/auth/callback"
 ]
 
-# ✅ App permissions
+# App permissions
 [access_scopes]
 scopes = "read_products,read_orders,write_orders"
 
-# ✅ Webhooks configuration
+# ⭐ WEBHOOKS CONFIGURATION ⭐
 [webhooks]
 api_version = "2024-07"
 
-# ✅ Mandatory compliance webhooks (SINGLE endpoint for all 3)
+# Mandatory compliance webhooks (SINGLE endpoint for all three)
 [[webhooks.subscriptions]]
 compliance_topics = ["customers/data_request", "customers/redact", "shop/redact"]
 uri = "https://courierdetect.evanderthorne-help.workers.dev/webhooks/compliance"
 
-# ✅ Order tracking webhook
+# Order tracking webhook
 [[webhooks.subscriptions]]
 topic = "orders/create"
 address = "https://courierdetect.evanderthorne-help.workers.dev/webhooks/orders/create"
 
-# ✅ REMOVE [build] section - not needed for Workers backend
+# ⭐ REMOVE THE [build] SECTION - not needed ⭐
 # [build]
 # command = "echo 'No build required'"
 # publish = "public/"
-
-# ✅ Environment-specific configs (optional)
-[env.development]
-application_url = "https://ai-order-trackers.pages.dev"
