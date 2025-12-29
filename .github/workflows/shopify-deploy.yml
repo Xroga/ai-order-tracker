@@ -18,30 +18,28 @@ jobs:
         with:
           node-version: '18'
       
+      - name: Install Dependencies
+        run: npm install
+      
+      - name: Build App
+        run: npm run build  # or your build command
+      
       - name: Install Shopify CLI
         run: npm install -g @shopify/cli@latest
       
-      - name: Deploy Shopify Configuration
+      - name: Deploy Shopify Config
         env:
           SHOPIFY_CLI_TOKEN: ${{ secrets.SHOPIFY_CLI_TOKEN }}
           SHOPIFY_CLI_STORE: ${{ secrets.SHOPIFY_CLI_STORE }}
         run: |
-          echo "🚀 Deploying to store: $SHOPIFY_CLI_STORE"
-          echo "Using token: ${SHOPIFY_CLI_TOKEN:0:10}..."
-          
-          # Set the store for Shopify CLI
-          shopify config set-store $SHOPIFY_CLI_STORE
-          
-          # Deploy app configuration
-          shopify app deploy --no-release --verbose
-          
-          echo "✅ Shopify app configuration deployed!"
+          echo "🚀 Deploying to: $SHOPIFY_CLI_STORE"
+          shopify app deploy --no-release
       
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: ai-order-trackers
-          directory: ./build  # or your build directory
+          projectName: ai-order-trackers  # VERIFY THIS NAME!
+          directory: ./dist  # CHANGE THIS TO YOUR BUILD FOLDER!
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
