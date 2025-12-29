@@ -1,25 +1,57 @@
-name: Deploy Shopify Configuration
+name: Deploy Shopify App
 
 on:
   push:
-    paths:
-      - 'shopify.app.toml'
+    branches: [main]
   workflow_dispatch:
+    inputs:
+      release:
+        description: 'Release to production?'
+        required: false
+        default: 'false'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Deploy Shopify Config
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install Shopify CLI
+        run: |
+          npm install -g @shopify/cli@latest
+          shopify version
+          
+      - name: Deploy Shopify Configuration
         env:
           SHOPIFY_CLI_TOKEN: ${{ secrets.SHOPIFY_CLI_TOKEN }}
+          SHOPIFY_CLI_STORE: ${{ secrets.SHOPIFY_CLI_STORE }}
         run: |
-          # Install Shopify CLI
-          npm install -g @shopify/cli
+          # Configure Shopify CLI
+          echo "Configuring Shopify CLI for store: $SHOPIFY_CLI_STORE"
           
-          # Deploy configuration
-          shopify app config link --token=$SHOPIFY_CLI_TOKEN
-          shopify app deploy --config-only
+          # Deploy the app configuration (without releasing)
+          shopify app deploy --no-release --verbose
+          
+          # Optional: Create app version if you want to release later
+          # shopify app version create --message "Automated deployment"
+          
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@2.0.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy
+          
+      - name: Test Webhooks
+        run: |
+          echo "Testing webhook endpoints..."
+          curl -s https://courierdetect.evanderthorne-help.workers.dev/health
+          echo ""
