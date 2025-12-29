@@ -1,37 +1,16 @@
-# shopify.app.toml - FINAL CORRECT VERSION
+# Create this file in your project root
+cat > shopify.app.toml << 'EOF'
 name = "Xroga AI Tracking"
 client_id = "01eb5efeb620eef58d313a65bfe89e0c"
-
-# Your app URL (where your app loads in Shopify Admin)
 application_url = "https://ai-order-trackers.pages.dev"
 embedded = true
 
-# Auth configuration
 [auth]
-# ONLY use your Workers domain for OAuth
-redirect_urls = [
-  "https://courierdetect.evanderthorne-help.workers.dev/auth/callback"
-]
+redirect_urls = [ "https://ai-order-trackers.pages.dev/api/auth/callback" ]
 
-# App permissions
-[access_scopes]
-scopes = "read_products,read_orders,write_orders"
-
-# ⭐ WEBHOOKS CONFIGURATION ⭐
 [webhooks]
-api_version = "2024-07"
+api_version = "2024-01"
 
-# Mandatory compliance webhooks (SINGLE endpoint for all three)
-[[webhooks.subscriptions]]
-compliance_topics = ["customers/data_request", "customers/redact", "shop/redact"]
-uri = "https://courierdetect.evanderthorne-help.workers.dev/webhooks/compliance"
-
-# Order tracking webhook
-[[webhooks.subscriptions]]
-topic = "orders/create"
-address = "https://courierdetect.evanderthorne-help.workers.dev/webhooks/orders/create"
-
-# ⭐ REMOVE THE [build] SECTION - not needed ⭐
-# [build]
-# command = "echo 'No build required'"
-# publish = "public/"
+[build]
+command = "npm run build"  # if you build your app
+EOF
