@@ -1,41 +1,28 @@
-# shopify.app.toml
+# shopify.app.toml - Hybrid setup
 name = "Xroga AI Tracking"
 client_id = "01eb5efeb620eef58d313a65bfe89e0c"
 
-# Your app URL
+# Frontend on Pages.dev
 application_url = "https://ai-order-trackers.pages.dev"
 embedded = true
 
-# Auth configuration
+# Auth and webhooks on Workers
 [auth]
 redirect_urls = [
-  "https://courierdetect-auth.evanderthorne-help.workers.dev/auth/callback",
-  "https://ai-order-trackers.pages.dev/auth/callback"
+  "https://courierdetect.evanderthorne-help.workers.dev/auth/callback"
 ]
 
-# App permissions
 [access_scopes]
 scopes = "read_products,read_orders,write_orders"
 
-# Webhooks configuration - FIXED VERSION
 [webhooks]
 api_version = "2024-07"
 
-# Mandatory compliance webhooks (REQUIRED for App Store submission)
+# All webhooks point to Workers
 [[webhooks.subscriptions]]
 compliance_topics = ["customers/data_request", "customers/redact", "shop/redact"]
-uri = "https://courierdetect-auth.evanderthorne-help.workers.dev/webhooks/compliance"
+uri = "https://courierdetect.evanderthorne-help.workers.dev/webhooks/compliance"
 
-# Business logic webhook for order tracking
 [[webhooks.subscriptions]]
 topic = "orders/create"
-address = "https://courierdetect-auth.evanderthorne-help.workers.dev/webhooks/orders/create"
-
-# Build configuration (for Cloudflare Pages)
-[build]
-command = "echo 'No build required'"
-publish = "public/"
-
-# Environment-specific configs
-[env.development]
-application_url = "https://ai-order-trackers.pages.dev"
+address = "https://courierdetect.evanderthorne-help.workers.dev/webhooks/orders/create"
