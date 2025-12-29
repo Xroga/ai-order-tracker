@@ -1,28 +1,40 @@
-# shopify.app.toml - Hybrid setup
+# shopify.app.toml
 name = "Xroga AI Tracking"
 client_id = "01eb5efeb620eef58d313a65bfe89e0c"
 
-# Frontend on Pages.dev
+# ✅ Frontend on Pages.dev (your app interface)
 application_url = "https://ai-order-trackers.pages.dev"
 embedded = true
 
-# Auth and webhooks on Workers
+# ✅ Auth configuration - only Workers (it handles OAuth)
 [auth]
 redirect_urls = [
   "https://courierdetect.evanderthorne-help.workers.dev/auth/callback"
 ]
 
+# ✅ App permissions
 [access_scopes]
 scopes = "read_products,read_orders,write_orders"
 
+# ✅ Webhooks configuration
 [webhooks]
 api_version = "2024-07"
 
-# All webhooks point to Workers
+# ✅ Mandatory compliance webhooks (SINGLE endpoint for all 3)
 [[webhooks.subscriptions]]
 compliance_topics = ["customers/data_request", "customers/redact", "shop/redact"]
 uri = "https://courierdetect.evanderthorne-help.workers.dev/webhooks/compliance"
 
+# ✅ Order tracking webhook
 [[webhooks.subscriptions]]
 topic = "orders/create"
 address = "https://courierdetect.evanderthorne-help.workers.dev/webhooks/orders/create"
+
+# ✅ REMOVE [build] section - not needed for Workers backend
+# [build]
+# command = "echo 'No build required'"
+# publish = "public/"
+
+# ✅ Environment-specific configs (optional)
+[env.development]
+application_url = "https://ai-order-trackers.pages.dev"
