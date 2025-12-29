@@ -1,194 +1,156 @@
-// worker.js - FIXED with exact webhook paths
+// Environment variables needed in Cloudflare Workers dashboard:
+// SHOPIFY_API_SECRET = your_app_client_secret (regenerate this!)
+// SHOPIFY_API_KEY = your_app_client_id (01eb5efeb620eef58d313a65bfe89e0c)
+
 export default {
-  async fetch(request, env, ctx) {
+  async fetch(request, env) {
     const url = new URL(request.url);
     const path = url.pathname;
     const method = request.method;
-    
-    // 1. Health check
+
+    // Health check endpoint
     if (path === "/health") {
       return new Response("✅ Xroga AI Tracking is operational", {
         headers: { "Content-Type": "text/plain" }
       });
     }
-    
-    // 2. OAuth - Start installation
-    if (path === "/auth") {
-      const shop = url.searchParams.get("shop");
-      if (!shop || !/^[a-zA-Z0-9][a-zA-Z0-9-]*\.myshopify\.com$/.test(shop)) {
-        return new Response("Invalid Shopify store", { status: 400 });
-      }
-      
-      const state = crypto.randomUUID();
-      const redirectUri = `${env.FRONTEND_URL || "https://ai-order-trackers.pages.dev"}/auth/callback`;
-      
-      const authUrl = new URL(`https://${shop}/admin/oauth/authorize`);
-      authUrl.searchParams.set("client_id", env.SHOPIFY_API_KEY);
-      authUrl.searchParams.set("scope", env.SHOPIFY_SCOPES || "read_orders,write_orders,read_products");
-      authUrl.searchParams.set("redirect_uri", redirectUri);
-      authUrl.searchParams.set("state", state);
-      
-      return Response.redirect(authUrl.toString());
-    }
-    
-    // 3. OAuth - Callback
+
+    // AUTH CALLBACK (Simplified - Shopify CLI handles most OAuth)
     if (path === "/auth/callback") {
-      const shop = url.searchParams.get("shop");
-      const code = url.searchParams.get("code");
-      
-      if (!shop || !code) {
-        return new Response("Missing parameters", { status: 400 });
-      }
-      
-      try {
-        // Get access token
-        const tokenResponse = await fetch(`https://${shop}/admin/oauth/access_token`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            client_id: env.SHOPIFY_API_KEY,
-            client_secret: env.SHOPIFY_API_SECRET,
-            code
-          })
-        });
-        
-        if (!tokenResponse.ok) {
-          throw new Error(`Token error: ${tokenResponse.status}`);
-        }
-        
-        const { access_token } = await tokenResponse.json();
-        
-        // Register webhooks after successful installation
-        await registerWebhooks(shop, access_token, env);
-        
-        // Redirect to app
-        const frontendUrl = `${env.FRONTEND_URL || "https://ai-order-trackers.pages.dev"}?shop=${encodeURIComponent(shop)}&token=${encodeURIComponent(access_token)}`;
-        return Response.redirect(frontendUrl);
-        
-      } catch (error) {
-        console.error("OAuth Error:", error);
-        return new Response(`Authentication failed: ${error.message}`, { status: 500 });
-      }
+      return new Response("Auth callback - install via Shopify Admin", {
+        status: 200,
+        headers: { "Content-Type": "text/plain" }
+      });
     }
-    
-    // 4. ⭐⭐⭐ EXACT WEBHOOK PATHS ⭐⭐⭐
-    if (method === "POST") {
-      if (path === "/webhooks/customers/data_request") {
-        return handleWebhook("customers/data_request", request, env);
-      }
-      if (path === "/webhooks/customers/redact") {
-        return handleWebhook("customers/redact", request, env);
-      }
-      if (path === "/webhooks/shop/redact") {
-        return handleWebhook("shop/redact", request, env);
-      }
+
+    // COMPLIANCE WEBHOOKS (All three go to same endpoint)
+    if (method === "POST" && path === "/webhooks/compliance") {
+      return handleComplianceWebhook(request, env);
     }
-    
-    // 5. Default response
-    return new Response("Xroga AI Tracking - Order Detection", {
+
+    // ORDER CREATE WEBHOOK
+    if (method === "POST" && path === "/webhooks/orders/create") {
+      return handleOrderCreateWebhook(request, env);
+    }
+
+    // Default response
+    return new Response("Xroga AI Tracking API", {
+      status: 200,
       headers: { "Content-Type": "text/plain" }
     });
   }
 };
 
-// Webhook Handler - FIXED
-async function handleWebhook(expectedTopic, request, env) {
+// ✅ CORRECT HMAC VERIFICATION
+async function verifyWebhook(request, env) {
+  const hmacHeader = request.headers.get('X-Shopify-Hmac-Sha256');
+  if (!hmacHeader) return false;
+
   try {
-    // 1. Get HMAC header
-    const hmacHeader = request.headers.get('X-Shopify-Hmac-Sha256');
-    if (!hmacHeader) {
-      return new Response('No HMAC header', { status: 401 });
-    }
+    // Get raw body
+    const rawBody = await request.clone().text();
     
-    // 2. Get Shopify secret
-    const SHOPIFY_SECRET = env.SHOPIFY_API_SECRET;
-    if (!SHOPIFY_SECRET) {
-      return new Response('Server misconfigured', { status: 500 });
-    }
-    
-    // 3. Get raw body
-    const rawBody = await request.text();
-    
-    // 4. Verify HMAC
-    const encoder = new TextEncoder();
+    // Create HMAC key
     const key = await crypto.subtle.importKey(
       'raw',
-      encoder.encode(SHOPIFY_SECRET),
+      new TextEncoder().encode(env.SHOPIFY_API_SECRET),
       { name: 'HMAC', hash: 'SHA-256' },
       false,
       ['verify']
     );
-    
-    const signature = Uint8Array.from(atob(hmacHeader), c => c.charCodeAt(0));
-    const data = encoder.encode(rawBody);
-    const isValid = await crypto.subtle.verify('HMAC', key, signature.buffer, data);
-    
-    if (!isValid) {
-      return new Response('Invalid HMAC signature', { status: 401 });
+
+    // Decode the base64 HMAC header
+    const signature = atob(hmacHeader);
+    const signatureBytes = new Uint8Array(signature.length);
+    for (let i = 0; i < signature.length; i++) {
+      signatureBytes[i] = signature.charCodeAt(i);
     }
-    
-    // 5. Get actual topic
-    const actualTopic = request.headers.get('X-Shopify-Topic');
-    const shopDomain = request.headers.get('X-Shopify-Shop-Domain');
-    const body = JSON.parse(rawBody);
-    
-    console.log(`✅ Webhook received: ${actualTopic} from ${shopDomain}`);
-    
-    // 6. Return 200 OK
-    return new Response(JSON.stringify({
-      success: true,
-      app: "Xroga AI Tracking",
-      webhook: actualTopic,
-      timestamp: new Date().toISOString()
-    }), {
-      status: 200,
-      headers: { 
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      }
-    });
-    
+
+    // Verify
+    const data = new TextEncoder().encode(rawBody);
+    return await crypto.subtle.verify(
+      'HMAC',
+      key,
+      signatureBytes,
+      data
+    );
   } catch (error) {
-    console.error('Webhook error:', error);
-    return new Response('Server error', { status: 500 });
+    console.error('HMAC verification error:', error);
+    return false;
   }
 }
 
-// Register webhooks
-async function registerWebhooks(shop, accessToken, env) {
-  const webhooks = [
-    {
-      topic: 'customers/data_request',
-      address: `https://courierdetect-auth.evanderthorne-help.workers.dev/webhooks/customers/data_request`,
-      format: 'json'
-    },
-    {
-      topic: 'customers/redact',
-      address: `https://courierdetect-auth.evanderthorne-help.workers.dev/webhooks/customers/redact`,
-      format: 'json'
-    },
-    {
-      topic: 'shop/redact',
-      address: `https://courierdetect-auth.evanderthorne-help.workers.dev/webhooks/shop/redact`,
-      format: 'json'
-    }
-  ];
-  
-  console.log('📝 Registering Shopify webhooks...');
-  
-  for (const webhook of webhooks) {
-    try {
-      await fetch(`https://${shop}/admin/api/2024-01/webhooks.json`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Shopify-Access-Token': accessToken
-        },
-        body: JSON.stringify({ webhook })
-      });
-      console.log(`✅ Registered: ${webhook.topic}`);
-    } catch (error) {
-      console.error(`❌ Failed to register ${webhook.topic}:`, error.message);
-    }
+// Handle all three compliance webhooks
+async function handleComplianceWebhook(request, env) {
+  // 1. Verify HMAC (REQUIRED for Shopify review)
+  if (!await verifyWebhook(request, env)) {
+    return new Response('Unauthorized', { status: 401 });
   }
+
+  // 2. Get webhook details
+  const topic = request.headers.get('X-Shopify-Topic');
+  const shopDomain = request.headers.get('X-Shopify-Shop-Domain');
+  const body = await request.json();
+
+  console.log(`🔒 Compliance webhook: ${topic} from ${shopDomain}`);
+
+  // 3. Process based on topic
+  switch(topic) {
+    case 'customers/data_request':
+      console.log('📋 Data request for:', body.customer?.email);
+      console.log('Orders requested:', body.orders_requested);
+      // Store this request and fulfill within 30 days
+      break;
+      
+    case 'customers/redact':
+      console.log('🗑️ Redact customer:', body.customer?.email);
+      console.log('Orders to redact:', body.orders_to_redact);
+      // Delete this customer's data from your database
+      break;
+      
+    case 'shop/redact':
+      console.log('🏪 Redact shop:', body.shop_domain);
+      // Delete all data for this shop from your database
+      break;
+  }
+
+  // 4. Return 200 OK (REQUIRED)
+  return new Response(JSON.stringify({ 
+    success: true,
+    message: `Processed ${topic} webhook`
+  }), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' }
+  });
+}
+
+// Handle order creation
+async function handleOrderCreateWebhook(request, env) {
+  // 1. Verify HMAC (REQUIRED)
+  if (!await verifyWebhook(request, env)) {
+    return new Response('Unauthorized', { status: 401 });
+  }
+
+  const orderData = await request.json();
+  const shopDomain = request.headers.get('X-Shopify-Shop-Domain');
+
+  console.log('🛒 New order received:', {
+    shop: shopDomain,
+    order_id: orderData.id,
+    order_number: orderData.order_number,
+    total_price: orderData.total_price,
+    email: orderData.email
+  });
+
+  // 2. Your order tracking logic here
+  // TODO: Implement your AI order detection logic
+  
+  // 3. Return 200 OK
+  return new Response(JSON.stringify({ 
+    success: true,
+    message: `Order ${orderData.order_number} received for tracking`
+  }), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' }
+  });
 }
