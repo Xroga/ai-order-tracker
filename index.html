@@ -4098,13 +4098,21 @@ function updateBranding() {
 
 // Update navigation menu active state
 function updateNavMenu() {
-    const navLinks = document.querySelectorAll('ui-nav-menu a');
+    const navLinks = document.querySelectorAll('nav.shopify-nav a');
     const currentSection = document.querySelector('.app-section.active')?.id || 'dashboard';
     
     navLinks.forEach(link => {
         link.classList.remove('active');
+        
+        // Check if this link points to the current section
+        const onclick = link.getAttribute('onclick');
+        if (onclick && onclick.includes(`showSection('${currentSection}')`)) {
+            link.classList.add('active');
+        }
+        
+        // Also check for direct href
         const href = link.getAttribute('href');
-        if (href && href.includes(currentSection)) {
+        if (href && href === '#' && onclick && onclick.includes(currentSection)) {
             link.classList.add('active');
         }
     });
