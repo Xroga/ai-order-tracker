@@ -1,38 +1,71 @@
-# shopify.app.toml - CORRECT VERSION
-name = "Xroga AI Tracking"
+name = "XROGA AI TRACKING"
 client_id = "01eb5efeb620eef58d313a65bfe89e0c"
 application_url = "https://ai-order-trackers.pages.dev"
 embedded = true
 
-# Auth configuration
 [auth]
 redirect_urls = [
-  "https://courierdetect.evanderthorne-help.workers.dev/auth/callback"
+  "https://courierdetect.evanderthorne-help.workers.dev/auth/callback",
+  "https://ai-order-trackers.pages.dev/auth/callback"
 ]
 
-# App permissions
-[access_scopes]
-scopes = "read_products,read_orders,write_orders"
+[app]
+url = "https://ai-order-trackers.pages.dev/"
+embedded = true
+pos = { embedded = false }
 
-# Webhooks configuration
+scopes = """
+  read_all_orders,
+  read_customers,
+  read_customer_data_erasure,
+  write_customer_data_erasure,
+  read_fulfillments,
+  write_fulfillments,
+  read_orders,
+  write_orders,
+  read_products,
+  read_shipping,
+  customer_read_orders,
+  customer_write_orders
+"""
+
 [webhooks]
-api_version = "2024-01"
+api_version = "2025-10"
 
-# Mandatory compliance webhooks (SINGLE endpoint for all three)
 [[webhooks.subscriptions]]
-compliance_topics = ["customers/data_request", "customers/redact", "shop/redact"]
-uri = "https://courierdetect.evanderthorne-help.workers.dev/webhooks/compliance"
+topic = "customers/data_request"
+address = "https://courierdetect.evanderthorne-help.workers.dev/webhooks/compliance"
+format = "json"
 
-# Order tracking webhook
+[[webhooks.subscriptions]]
+topic = "customers/redact"
+address = "https://courierdetect.evanderthorne-help.workers.dev/webhooks/compliance"
+format = "json"
+
+[[webhooks.subscriptions]]
+topic = "shop/redact"
+address = "https://courierdetect.evanderthorne-help.workers.dev/webhooks/compliance"
+format = "json"
+
 [[webhooks.subscriptions]]
 topic = "orders/create"
 address = "https://courierdetect.evanderthorne-help.workers.dev/webhooks/orders/create"
+format = "json"
 
-# App uninstalled webhook
+[[webhooks.subscriptions]]
+topic = "orders/updated"
+address = "https://courierdetect.evanderthorne-help.workers.dev/webhooks/orders/updated"
+format = "json"
+
+[[webhooks.subscriptions]]
+topic = "orders/fulfilled"
+address = "https://courierdetect.evanderthorne-help.workers.dev/webhooks/orders/fulfilled"
+format = "json"
+
 [[webhooks.subscriptions]]
 topic = "app/uninstalled"
 address = "https://courierdetect.evanderthorne-help.workers.dev/webhooks/app_uninstalled"
+format = "json"
 
-# Build configuration (optional)
 [build]
 command = "npm run build"
