@@ -1518,10 +1518,13 @@ function initializeShopifyApp() {
             app = window.appBridge.default.createApp({
                 apiKey: '01eb5efeb620eef58d313a65bfe89e0c',
                 shopOrigin: shop,
-                host: host
+                host: host,
+                forceRedirect: true
             });
             
-            console.log('Shopify App Bridge initialized successfully');
+            console.log('✅ Shopify App Bridge initialized successfully');
+            console.log('Shop:', shop);
+            console.log('Host:', host);
             
             // Create navigation menu
             createNavigationMenu();
@@ -1533,12 +1536,16 @@ function initializeShopifyApp() {
             autoAddWidgetToStore(shop);
             
             return true;
+        } else {
+            console.log('⚠️ Not embedded - missing shop/host parameters');
+            console.log('Running in standalone mode');
+            return false;
         }
     } catch (error) {
-        console.log('App Bridge initialization failed:', error);
+        console.error('❌ App Bridge initialization failed:', error);
         console.log('Running in standalone mode');
+        return false;
     }
-    return false;
 }
 
 // Create Shopify Navigation Menu
