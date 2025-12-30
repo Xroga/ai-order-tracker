@@ -1669,13 +1669,14 @@ function initializeShopifyApp() {
 // Create Shopify Navigation Menu
 function createNavigationMenu() {
     // Remove existing menu if any
-    const existingMenu = document.querySelector('ui-nav-menu');
+    const existingMenu = document.querySelector('nav.shopify-nav');
     if (existingMenu) {
         existingMenu.remove();
     }
     
     // Create new menu with Privacy Policy
-    const navMenu = document.createElement('ui-nav-menu');
+    const navMenu = document.createElement('nav');
+    navMenu.className = 'shopify-nav';
     navMenu.innerHTML = `
         <a href="#" rel="home" onclick="showSection('dashboard'); return false;">
             <i class="fas fa-home"></i> Dashboard
@@ -1689,8 +1690,6 @@ function createNavigationMenu() {
         <a href="#" onclick="showSection('widget'); return false;">
             <i class="fas fa-code"></i> Store Widget
         </a>
-        
-        <!-- Privacy Policy Link -->
         <a href="privacy.html" target="_blank">
             <i class="fas fa-shield-alt"></i> Privacy Policy
         </a>
